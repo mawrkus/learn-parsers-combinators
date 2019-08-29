@@ -1,0 +1,11 @@
+{
+  "name": "learn-parsers-combinators",
+  "version": "0.1.0",
+  "description": "Playground for learning parsers combinators",
+  "main": "index.js",
+  "scripts": {
+    "test": "clear && node demo.js"
+  },
+  "author": "mawrkus <web@sparring-partner.be>",
+  "license": "MIT"
+}

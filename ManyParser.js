@@ -24,6 +24,23 @@ module.exports = class ManyParser extends Parser {
       } = nextState;
 
       if (error) {
+        // we expect at least one result
+        if (!results.length) {
+          return {
+            ...currentState,
+            result: {
+              type: this.type,
+              value: results,
+            },
+            error: super.createError(
+              `${this._soloParser.type}`,
+              targetString,
+              index,
+            ),
+          };
+        }
+
+        // done parsing
         return {
           ...currentState,
           result: {
@@ -33,21 +50,10 @@ module.exports = class ManyParser extends Parser {
           error: null,
         };
       }
-
-      currentState = nextState;
 
       results.push(result);
 
-      if (!targetString.length) {
-        return {
-          ...currentState,
-          result: {
-            type: this.type,
-            value: results,
-          },
-          error: null,
-        };
-      }
+      currentState = nextState;
     }
   }
 };

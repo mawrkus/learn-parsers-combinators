@@ -4,9 +4,9 @@ const ParserError = require('./ParserError');
 module.exports = class StringParser extends Parser {
   constructor(expectedString, type = 'String') {
     super({ name: 'StringParser', type });
-    
-    this._expectedString = expectedString;
-    this._expectedStringLength = this._expectedString.length;
+
+    this._expectedValue = expectedString;
+    this._expectedValueLength = this._expectedValue.length;
   }
 
   run(parserState) {
@@ -17,22 +17,22 @@ module.exports = class StringParser extends Parser {
       index,
     } = parserState;
 
-    if (targetString.startsWith(this._expectedString)) {
+    if (!targetString || !targetString.length || !targetString.startsWith(this._expectedValue)) {
       return {
         ...parserState,
-        targetString: targetString.slice(this._expectedStringLength),
-        index: index + this._expectedStringLength,
-        result: {
-          type: this.type,
-          value: this._expectedString,
-        },
-        error: null,
+        error: super.createError(this._expectedValue, targetString, index),
       };
     }
 
     return {
       ...parserState,
-      error: super.createError(this._expectedString, targetString, index),
+      targetString: targetString.slice(this._expectedValueLength),
+      index: index + this._expectedValueLength,
+      result: {
+        type: this.type,
+        value: this._expectedValue,
+      },
+      error: null,
     };
   }
 };

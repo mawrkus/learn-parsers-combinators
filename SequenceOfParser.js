@@ -13,7 +13,8 @@ module.exports = class SequenceOfParser extends Parser {
     let currentState = parserState;
     const results = [];
 
-    for (const parser of this._parsers) {
+    for (let i=0; i<this._parsers.length; i++) {
+      const parser = this._parsers[i];
       currentState = parser.run(currentState);
 
       const {
@@ -27,7 +28,7 @@ module.exports = class SequenceOfParser extends Parser {
         return {
           ...currentState,
           error: super.createError(
-            `${this._parsers.map(({ type }) => type).join(' then ')}`,
+            `${this._parsers.map((p, j) => `${p.type} (${j >= i ? 'ko' : 'ok'})`).join(' -> ')}`,
             targetString,
             index,
           ),

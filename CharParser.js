@@ -5,7 +5,7 @@ module.exports = class CharParser extends Parser {
   constructor(expectedChar, type = 'Char') {
     super({ name: 'CharParser', type });
 
-    this._expectedChar = expectedChar;
+    this._expectedValue = expectedChar;
   }
 
   run(parserState) {
@@ -16,22 +16,22 @@ module.exports = class CharParser extends Parser {
       index,
     } = parserState;
 
-    if (this._expectedChar === targetString[0]) {
+    if (!targetString || !targetString.length || this._expectedValue !== targetString[0]) {
       return {
         ...parserState,
-        targetString: targetString.slice(1),
-        index: index + 1,
-        result: {
-          type: this.type,
-          value: this._expectedChar,
-        },
-        error: null,
+        error: super.createError(this._expectedValue, targetString, index),
       };
     }
 
     return {
       ...parserState,
-      error: super.createError(this._expectedChar, targetString, index),
+      targetString: targetString.slice(1),
+      index: index + 1,
+      result: {
+        type: this.type,
+        value: this._expectedValue,
+      },
+      error: null,
     };
   }
 };

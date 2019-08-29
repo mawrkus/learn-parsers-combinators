@@ -2,6 +2,7 @@ const {
   chr,
   str,
   many,
+  manyOrNone,
   sequenceOf,
   anyExcept,
   anyOf,
@@ -20,7 +21,7 @@ const fieldParser = sequenceOf([
 ], 'Field');
 
 const lineParser = sequenceOf([
-  many(
+  manyOrNone(
     sequenceOf([
       fieldParser,
       fieldDelimiterParser,
@@ -32,22 +33,27 @@ const lineParser = sequenceOf([
   ])
 ], 'Line');
 
-const parser = many(lineParser, 'CSV');
+const parser = many(lineParser);
 
 /* *** */
 
 function parseCsv(csv) {
   console.log('Parsing %s...\n', JSON.stringify(csv));
 
-  return parser.run({
+  const result = parser.run({
     targetString: csv,
     index: 0,
     result: null,
     error: null,
   });
+
+  return {
+    ...result,
+    isComplete: !result.targetString,
+  };
 }
 
-const parsed = parseCsv('"Marc";"Tina"\n"Cata";"Carlos"\n');
+const parsed = parseCsv('"Tina";"Marc"\n"Cata";"Carlos"\n');
 
 if (parsed.error) {
   console.error(parsed.error);

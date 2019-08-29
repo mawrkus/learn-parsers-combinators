@@ -1,3 +1,5 @@
+const Parser = require('./Parser');
+
 const {
   chr,
   str,
@@ -37,23 +39,27 @@ const parser = many(lineParser);
 
 /* *** */
 
-function parseCsv(csv) {
-  console.log('Parsing %s...\n', JSON.stringify(csv));
+class CsvParser extends Parser {
+  run(csv) {
+    console.log('Parsing %s...\n', JSON.stringify(csv));
 
-  const result = parser.run({
-    targetString: csv,
-    index: 0,
-    result: null,
-    error: null,
-  });
+    const result = parser.run({
+      targetString: csv,
+      index: 0,
+      result: null,
+      error: null,
+    });
 
-  return {
-    ...result,
-    isComplete: !result.targetString,
-  };
+    return {
+      ...result,
+      isComplete: !result.targetString,
+    };
+  }
 }
 
-const parsed = parseCsv('"Tina";"Marc"\n"Cata";"Carlos"\n');
+const csvParser = new CsvParser();
+
+const parsed = csvParser.run('"Tina";"Marc"\n"Cata";"Carlos"\n');
 
 if (parsed.error) {
   console.error(parsed.error);

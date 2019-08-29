@@ -19,8 +19,7 @@ const fieldParser = sequenceOf([
   quoteParser,
 ], 'Field');
 
-const lineParser =
-sequenceOf([
+const lineParser = sequenceOf([
   many(
     sequenceOf([
       fieldParser,

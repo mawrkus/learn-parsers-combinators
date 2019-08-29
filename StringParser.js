@@ -3,6 +3,10 @@ const ParserError = require('./ParserError');
 
 module.exports = class StringParser extends Parser {
   constructor(expectedString, type = 'String') {
+    if (!expectedString || !expectedString.length || typeof expectedString !== 'string') {
+      throw new TypeError(`Invalid string "${expectedString}"!`);
+    }
+
     super({ name: 'StringParser', type });
 
     this._expectedValue = expectedString;

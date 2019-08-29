@@ -10,40 +10,46 @@ const {
   anyOf,
 } = require('./');
 
-const quoteParser = chr('"', 'Quote');
-const fieldDelimiterParser = chr(';', 'Delimiter');
-const endOfLineParser = chr('\n', 'EndOfLine');
-
-const fieldContentParser = anyExcept(quoteParser, 'FieldContent');
-
-const fieldParser = sequenceOf([
-  quoteParser,
-  fieldContentParser,
-  quoteParser,
-], 'Field');
-
-const lineParser = sequenceOf([
-  manyOrNone(
-    sequenceOf([
-      fieldParser,
-      fieldDelimiterParser,
-    ])
-  ),
-  sequenceOf([
-    fieldParser,
-    endOfLineParser,
-  ])
-], 'Line');
-
-const parser = many(lineParser);
-
-/* *** */
-
 class CsvParser extends Parser {
+  constructor({
+    quote = '"',
+    delimiter = ';',
+    eol = '\n',
+  } = {}) {
+    super({ name: 'CsvParser', type: 'CSV' });
+
+    const quoteParser = chr(quote, 'Quote');
+    const fieldDelimiterParser = chr(delimiter, 'Delimiter');
+    const endOfLineParser = chr(eol, 'EndOfLine');
+
+    const fieldContentParser = anyExcept(quoteParser, 'FieldContent');
+
+    const fieldParser = sequenceOf([
+      quoteParser,
+      fieldContentParser,
+      quoteParser,
+    ], 'Field');
+
+    const lineParser = sequenceOf([
+      manyOrNone(
+        sequenceOf([
+          fieldParser,
+          fieldDelimiterParser,
+        ])
+      ),
+      sequenceOf([
+        fieldParser,
+        endOfLineParser,
+      ])
+    ], 'Line');
+
+    this._parser = many(lineParser);
+  }
+
   run(csv) {
     console.log('Parsing %s...\n', JSON.stringify(csv));
 
-    const result = parser.run({
+    const result = this._parser.run({
       targetString: csv,
       index: 0,
       result: null,
@@ -56,6 +62,8 @@ class CsvParser extends Parser {
     };
   }
 }
+
+/* *** */
 
 const csvParser = new CsvParser();
 

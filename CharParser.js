@@ -3,6 +3,10 @@ const ParserError = require('./ParserError');
 
 module.exports = class CharParser extends Parser {
   constructor(expectedChar, type = 'Char') {
+    if (!expectedChar || expectedChar.length !== 1 || typeof expectedChar !== 'string') {
+      throw new TypeError(`Invalid char "${expectedChar}"!`);
+    }
+
     super({ name: 'CharParser', type });
 
     this._expectedValue = expectedChar;

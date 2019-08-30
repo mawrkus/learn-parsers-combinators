@@ -9,7 +9,7 @@ module.exports = class Parser {
 
   run(parserState) {
     if (this._debug) {
-      console.log(`Running ${this.name} ->`, JSON.stringify(parserState, null, 1));
+      console.log(`Running ${this.name} (${this.type}) ->`, JSON.stringify(parserState, null, 1));
     }
   }
 

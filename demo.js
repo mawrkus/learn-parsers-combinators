@@ -31,16 +31,14 @@ class CsvParser extends Parser {
     ], 'Field');
 
     const lineParser = sequenceOf([
+      fieldParser,
       manyOrNone(
         sequenceOf([
-          fieldParser,
           fieldDelimiterParser,
+          fieldParser,
         ])
       ),
-      sequenceOf([
-        fieldParser,
-        endOfLineParser,
-      ])
+      endOfLineParser,
     ], 'Line');
 
     this._parser = many(lineParser);
@@ -67,7 +65,8 @@ class CsvParser extends Parser {
 
 const csvParser = new CsvParser();
 
-const parsed = csvParser.run('"Tina";"Marc"\n"Cata";"Carlos"\n');
+// const parsed = csvParser.run('"Tina";"Marc"\n"Cata";"Carlos"\n');
+const parsed = csvParser.run('"Tina"\n"Carlos"\n'); // FIXME
 
 if (parsed.error) {
   console.error(parsed.error);

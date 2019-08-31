@@ -1,4 +1,4 @@
-const Parser = require('./Parser');
+const Parser = require('../Parser');
 
 module.exports = class AnyOfParser extends Parser {
   constructor(parsers, type = 'AnyOf') {

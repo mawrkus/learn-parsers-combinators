@@ -1,5 +1,6 @@
-const Parser = require('./Parser');
+const Parser = require('./src/Parser');
 
+/* eslint-disable no-unused-vars */
 const {
   chr,
   str,
@@ -8,7 +9,8 @@ const {
   sequenceOf,
   anyExcept,
   anyOf,
-} = require('./');
+} = require('./src');
+/* eslint-enable no-unused-vars */
 
 class CsvParser extends Parser {
   constructor({
@@ -36,7 +38,7 @@ class CsvParser extends Parser {
         sequenceOf([
           fieldDelimiterParser,
           fieldParser,
-        ])
+        ]),
       ),
       endOfLineParser,
     ], 'Line');

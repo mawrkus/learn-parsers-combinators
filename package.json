@@ -4,8 +4,45 @@
   "description": "Playground for learning parsers combinators",
   "main": "index.js",
   "scripts": {
-    "test": "clear && node demo.js"
+    "demo": "clear && node demo.js",
+    "lint": "eslint ./src",
+    "pretest": "npm run lint",
+    "test": "jest",
+    "tdd": "jest --watch --notify"
   },
   "author": "mawrkus <web@sparring-partner.be>",
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "eslint": "^6.3.0",
+    "eslint-config-airbnb-base": "^14.0.0",
+    "eslint-plugin-import": "^2.18.2",
+    "eslint-plugin-jest": "^22.16.0",
+    "jest": "^24.9.0"
+  },
+  "eslintConfig": {
+    "extends": [
+      "airbnb-base"
+    ],
+    "plugins": [
+      "jest"
+    ],
+    "env": {
+      "jest": true
+    },
+    "rules": {
+      "jest/no-disabled-tests": "error",
+      "jest/no-focused-tests": "error",
+      "jest/no-identical-title": "warn",
+      "no-underscore-dangle": "off"
+    }
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "collectCoverage": true,
+    "verbose": true,
+    "testPathIgnorePatterns": [
+      "/node_modules/"
+    ],
+    "testRegex": "/__tests__/.*\\.spec\\.js$"
+  }
 }

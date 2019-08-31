@@ -1,4 +1,4 @@
-const Parser = require('./Parser');
+const Parser = require('../Parser');
 
 module.exports = class SequenceOfParser extends Parser {
   constructor(parsers, type = 'SequenceOf') {
@@ -13,7 +13,7 @@ module.exports = class SequenceOfParser extends Parser {
     let currentState = parserState;
     const results = [];
 
-    for (let i=0; i<this._parsers.length; i++) {
+    for (let i = 0; i < this._parsers.length; i += 1) {
       const parser = this._parsers[i];
       currentState = parser.run(currentState);
 

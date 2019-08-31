@@ -1,5 +1,4 @@
-const Parser = require('./Parser');
-const ParserError = require('./ParserError');
+const Parser = require('../Parser');
 
 module.exports = class StringParser extends Parser {
   constructor(expectedString, type = 'String') {

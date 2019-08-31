@@ -1,4 +1,4 @@
-const Parser = require('./Parser');
+const Parser = require('../Parser');
 
 module.exports = class AnyExceptParser extends Parser {
   constructor(exceptParser, type = 'AnyExcept') {
@@ -11,9 +11,9 @@ module.exports = class AnyExceptParser extends Parser {
     super.run(parserState);
 
     let result = '';
-
     let currentState = parserState;
 
+    // eslint-disable-next-line no-constant-condition
     while (true) {
       const {
         error,
@@ -33,7 +33,7 @@ module.exports = class AnyExceptParser extends Parser {
         index: index + 1,
         result: {
           type: this.type,
-          value: result,          
+          value: result,
         },
       };
     }

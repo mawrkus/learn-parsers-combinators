@@ -1,4 +1,4 @@
-const Parser = require('./Parser');
+const Parser = require('../Parser');
 
 module.exports = class ManyParser extends Parser {
   constructor(soloParser, type = 'Many') {
@@ -13,6 +13,7 @@ module.exports = class ManyParser extends Parser {
     let currentState = parserState;
     const results = [];
 
+    // eslint-disable-next-line no-constant-condition
     while (true) {
       const nextState = this._soloParser.run(currentState);
 

@@ -19,8 +19,6 @@ module.exports = (singleParser) => {
       const nextState = singleParser.parseFunction(currentState);
 
       const {
-        targetString,
-        index,
         result,
         error,
       } = nextState;
@@ -34,8 +32,7 @@ module.exports = (singleParser) => {
             error: createError(
               'ManyParserError',
               `${singleParser.type}`,
-              targetString,
-              index,
+              nextState,
             ),
           };
         }

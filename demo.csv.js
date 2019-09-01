@@ -6,6 +6,7 @@ const {
   anyOf,
   chr,
   many,
+  regex,
   sequenceOf,
   str,
 } = require('./src/parsers');
@@ -63,19 +64,20 @@ class CsvParser extends Parser {
   }
 
   run(targetString) {
-    console.log('Parsing %s...\n', JSON.stringify(targetString));
     return super.run(targetString);
   }
 }
 
-const parser = new CsvParser();
-const parsed = parser.run('"tina";"cata";"nana"\n"marc";"carlos";"bogdan"\n');
+const parsed = regex(/[a-z]+$/).run('123 land 78 flat');
 
-// const parser = new CsvParser({ quote: false, delimiter: ',', eol: '\r\n' });
-// const parsed = parser.run('tina,cata\r\nnana,marc\r\ncarlos,bogdan\r\n');
+// const parser = new CsvParser();
+// const parsed = parser.run('"tina";"cata";"nana"\n"marc";"carlos";"bogdan"\n');
+
+// // const parser = new CsvParser({ quote: false, delimiter: ',', eol: '\r\n' });
+// // const parsed = parser.run('tina,cata\r\nnana,marc\r\ncarlos,bogdan\r\n');
 
 if (parsed.error) {
   console.error(parsed.error);
 } else {
-  console.log('Parsed result ->', JSON.stringify(parsed, null, 1));
+  console.log('Parsed ->', JSON.stringify(parsed, null, 1));
 }

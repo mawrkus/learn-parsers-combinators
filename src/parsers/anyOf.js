@@ -22,18 +22,12 @@ module.exports = (parsers) => {
       return nextState;
     }
 
-    const {
-      targetString,
-      index,
-    } = parserState;
-
     return {
       ...parserState,
       error: createError(
         'AnyOfParserError',
         `${parsers.map(({ type }) => type).join(' or ')}`,
-        targetString,
-        index,
+        parserState,
       ),
     };
   }, `AnyOf(${parsers.map((p) => p.type).join(' or ')})`);

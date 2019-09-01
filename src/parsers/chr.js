@@ -20,7 +20,7 @@ module.exports = (expectedChar) => {
     if (!targetString || !targetString.length || expectedChar !== targetString[0]) {
       return {
         ...parserState,
-        error: createError('ChrParserError', expectedChar, targetString, index),
+        error: createError('ChrParserError', expectedChar, parserState),
       };
     }
 

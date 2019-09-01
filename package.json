@@ -4,11 +4,11 @@
   "description": "Playground for learning parsers combinators",
   "main": "index.js",
   "scripts": {
-    "demo": "clear && node demo.js",
     "lint": "eslint ./src",
     "pretest": "npm run lint",
     "test": "jest",
-    "tdd": "jest --watch --notify"
+    "tdd": "jest --watch --notify",
+    "demo:csv": "clear && node demo.csv.js"
   },
   "author": "mawrkus <web@sparring-partner.be>",
   "license": "MIT",

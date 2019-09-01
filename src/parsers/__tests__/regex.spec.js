@@ -39,36 +39,64 @@ describe('regex(regex, capture = false)', () => {
       });
     });
 
-    describe('when parsing a target string that "regex" matches', () => {
-      describe('if "capture" is false', () => {
-        it('should return the proper parser state', () => {
+    describe('if "capture" is false', () => {
+      describe('when parsing a target string that "regex" matches', () => {
+        it('should return the proper parser state (/\\w+/)', () => {
           const identifier = regex(/\w+/);
-          const initialState = buildParserState({ targetString: 'Kode9 (=)' });
+          const initialState = buildParserState({ targetString: '*** Kode9 (=)' });
 
           const newParserState = identifier.parseFunction(initialState);
 
           expect(newParserState).toEqual({
             targetString: ' (=)',
-            index: 5,
+            index: 9,
             result: 'Kode9',
             error: null,
           });
         });
-      });
 
-      describe('if "capture" is true', () => {
-        it('should return the proper parser state, using the first captured group', () => {
-          const identifier = regex(/.+(\dpm)/, true);
-          const initialState = buildParserState({ targetString: 'Kode9 live at 9pm at Apolo' });
+        it('should return the proper parser state (/[a-z]+$/)', () => {
+          const letters = regex(/[a-z]+$/);
+          const initialState = buildParserState({ targetString: '1 2 1 2... the earth is flat' });
 
-          const newParserState = identifier.parseFunction(initialState);
+          const newParserState = letters.parseFunction(initialState);
 
           expect(newParserState).toEqual({
-            targetString: ' at Apolo',
-            index: 17,
-            result: '9pm',
+            targetString: '',
+            index: 28,
+            result: 'flat',
             error: null,
           });
+        });
+
+        it('should return the proper parser state (/^[a-z]+/)', () => {
+          const letters = regex(/^[a-z]+/);
+          const initialState = buildParserState({ targetString: 'welcome to the world' });
+
+          const newParserState = letters.parseFunction(initialState);
+
+          expect(newParserState).toEqual({
+            targetString: ' to the world',
+            index: 7,
+            result: 'welcome',
+            error: null,
+          });
+        });
+      });
+    });
+
+    describe('if "capture" is true', () => {
+      it('should return the proper parser state, using the first captured group', () => {
+        const identifier = regex(/.+(\dpm)/, true);
+        const initialState = buildParserState({ targetString: 'Kode9 live at 9pm at Apolo' });
+
+        const newParserState = identifier.parseFunction(initialState);
+
+        expect(newParserState).toEqual({
+          targetString: ' at Apolo',
+          index: 17,
+          result: '9pm',
+          error: null,
         });
       });
     });

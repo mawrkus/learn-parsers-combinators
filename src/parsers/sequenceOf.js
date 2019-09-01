@@ -19,8 +19,6 @@ module.exports = (parsers) => {
       currentState = parsers[i].parseFunction(currentState);
 
       const {
-        targetString,
-        index,
         result,
         error,
       } = currentState;
@@ -29,8 +27,7 @@ module.exports = (parsers) => {
         parseError = createError(
           'SequenceOfParserError',
           `${parsers.map((p, j) => `${p.type} (${j >= i ? 'ko' : 'ok'})`).join(' -> ')}`,
-          targetString,
-          index,
+          currentState,
         );
         break;
       }

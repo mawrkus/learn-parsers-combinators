@@ -22,7 +22,7 @@ module.exports = (expectedString) => {
     if (!targetString || !targetString.length || !targetString.startsWith(expectedString)) {
       return {
         ...parserState,
-        error: createError('StringParserError', expectedString, targetString, index),
+        error: createError('StringParserError', expectedString, parserState),
       };
     }
 

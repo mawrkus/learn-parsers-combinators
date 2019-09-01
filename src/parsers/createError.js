@@ -1,9 +1,17 @@
 const ParserError = require('../ParserError');
 
-module.exports = function createError(type, expected, actual, index) {
+module.exports = function createError(type, expected, parserState) {
+  const {
+    originalString,
+    targetString,
+    index,
+  } = parserState;
+
   const expectedMsg = `Expected: ${JSON.stringify(expected.toString())}`;
-  const actualMsg = `Actual: ${JSON.stringify(actual)}`;
-  const indexMsg = `         ^ at index ${index}!`;
+  const actualMsg = `Actual: ${JSON.stringify(originalString)}`;
+  const indexMsg = `${Array(index + 10).join(' ')}^ at index ${index}!`;
+
   const msg = `\n${expectedMsg}\n${actualMsg}\n${indexMsg}`;
-  return new ParserError(type, msg, expected, actual, index);
+
+  return new ParserError(type, msg, expected, targetString, index);
 };

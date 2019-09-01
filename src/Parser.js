@@ -13,6 +13,7 @@ module.exports = class Parser {
 
   run(targetString) {
     const initialState = {
+      originalString: targetString,
       targetString,
       index: 0,
       result: null,

@@ -20,7 +20,7 @@ module.exports = (regex, capture = false) => {
     if (!targetString || !targetString.length) {
       return {
         ...parserState,
-        error: createError('RegexParserError', regex, targetString, index),
+        error: createError('RegexParserError', regex, parserState),
       };
     }
 
@@ -30,16 +30,18 @@ module.exports = (regex, capture = false) => {
     if (!matchedString) {
       return {
         ...parserState,
-        error: createError('RegexParserError', regex, targetString, index),
+        error: createError('RegexParserError', regex, parserState),
       };
     }
 
-    const matchedStringLength = matches[0].length;
+    const newIndex = capture
+      ? matches[0].length
+      : matches.index + matchedString.length;
 
     return {
       ...parserState,
-      targetString: targetString.slice(matchedStringLength),
-      index: index + matchedStringLength,
+      targetString: targetString.slice(newIndex),
+      index: newIndex,
       result: matchedString,
       error: null,
     };

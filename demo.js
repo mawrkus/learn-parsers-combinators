@@ -12,36 +12,68 @@ const {
 } = require('./src/parsers');
 /* eslint-enable no-unused-vars */
 
-const fieldParser = sequenceOf([
-  chr('"'),
-  anyExcept(chr('"')),
-  chr('"'),
-]).map((result) => ({
-  type: 'Field',
-  value: result,
-}));
+class CsvParser extends Parser {
+  constructor({ quote = '"', delimiter = ';', eol = '\n' } = {}) {
+    const quoteParser = quote !== false ? chr(quote) : null;
+    const delimiterParser = chr(delimiter);
+    const eolParser = str(eol);
 
-const lineParser = sequenceOf([
-  fieldParser,
-  // FIXME
-  manyOrNone(
-    sequenceOf([
-      chr(';'),
-      fieldParser,
-    ]),
-  ),
-  chr('\n'),
-]);
+    const fieldParser = quote === false
+      ? anyExcept(
+        anyOf([
+          delimiterParser,
+          eolParser,
+        ]),
+      )
+      : sequenceOf([
+        quoteParser,
+        anyExcept(quoteParser),
+        quoteParser,
+      ])
+        .map((result) => result[1]);
 
-const csvParser = (lineParser);
+    const lineParser = anyOf([
+      sequenceOf([
+        fieldParser,
+        eolParser,
+      ])
+        .map((result) => result[0]),
+      sequenceOf([
+        fieldParser,
+        many(
+          sequenceOf([
+            delimiterParser,
+            fieldParser,
+          ]),
+        ),
+        eolParser,
+      ])
+        .map((results) => [
+          results[0],
+          ...results[1].map((r) => r[1]),
+        ]),
+    ]);
 
-const parser = new Parser(csvParser.parseFunction, 'CSVParser');
+    const csvParser = many(lineParser).map((results) => ({
+      type: 'CSV',
+      linesCount: results.length,
+      value: results,
+    }));
 
-const csv = '"tina"\nmarc"\n';
+    super(csvParser.parseFunction, 'CSVParser');
+  }
 
-console.log('Parsing %s...\n', JSON.stringify(csv));
+  run(targetString) {
+    console.log('Parsing %s...\n', JSON.stringify(targetString));
+    return super.run(targetString);
+  }
+}
 
-const parsed = parser.run(csv);
+const parser = new CsvParser();
+const parsed = parser.run('"tina";"cata";"nana"\n"marc";"carlos";"bogdan"\n');
+
+// const parser = new CsvParser({ quote: false, delimiter: ',', eol: '\r\n' });
+// const parsed = parser.run('tina,cata\r\nnana,marc\r\ncarlos,bogdan\r\n');
 
 if (parsed.error) {
   console.error(parsed.error);

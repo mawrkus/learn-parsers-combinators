@@ -1,7 +1,7 @@
 const Parser = require('../Parser');
 
-module.exports = (parser) => {
-  if (!(parser instanceof Parser)) {
+module.exports = (exceptParser) => {
+  if (!(exceptParser instanceof Parser)) {
     throw new TypeError('Please provide an instance of the "Parser" class!');
   }
 
@@ -19,7 +19,7 @@ module.exports = (parser) => {
         error,
         targetString,
         index,
-      } = parser.parseFunction(currentState);
+      } = exceptParser.parseFunction(currentState);
 
       if (!error || !targetString.length) {
         return currentState;
@@ -34,7 +34,7 @@ module.exports = (parser) => {
         result,
       };
     }
-  }, `AnyExcept (${parser.type})`);
+  }, `AnyExcept(${exceptParser.type})`);
 
   return anyExceptParser;
 };

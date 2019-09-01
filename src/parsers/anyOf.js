@@ -36,7 +36,7 @@ module.exports = (parsers) => {
         index,
       ),
     };
-  }, `AnyOf (${parsers.map((p) => p.type).join(' or ')})`);
+  }, `AnyOf(${parsers.map((p) => p.type).join(' or ')})`);
 
   return anyOfParser;
 };

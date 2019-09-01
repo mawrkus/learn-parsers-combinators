@@ -22,9 +22,9 @@ describe('anyOf(parsers)', () => {
     });
   });
 
-  describe('the parser', () => {
-    describe('when parsing a target string that can be matched by one of the parser functions', () => {
-      it('should return the proper new parser state', () => {
+  describe('the parser returned', () => {
+    describe('when parsing a target string that can be matched by one of the parsers', () => {
+      it('should return the proper parser state', () => {
         const xyz = anyOf([chr('a'), chr('x'), chr('b')]);
         const initialState = buildParserState({ targetString: 'xyz' });
 
@@ -39,8 +39,8 @@ describe('anyOf(parsers)', () => {
       });
     });
 
-    describe('when parsing a target string that cannot be matched by any of parser functions', () => {
-      it('should return the proper error parser state', () => {
+    describe('when parsing a target string that cannot be matched by any of the parsers', () => {
+      it('should return a parser error state', () => {
         const xyz = anyOf([chr('a'), chr('o'), chr('b')]);
         const initialState = buildParserState({ targetString: 'xyz' });
 
@@ -55,7 +55,7 @@ describe('anyOf(parsers)', () => {
       });
     });
 
-    describe('when called on an error parser state', () => {
+    describe('when called on a parser error state', () => {
       it('should do nothing but return it', () => {
         const xyz = anyOf([chr('x'), chr('y'), chr('z')]);
         const error = new ParserError('Ooops!');

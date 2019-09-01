@@ -33,7 +33,7 @@ module.exports = (expectedString) => {
       result: expectedString,
       error: null,
     };
-  }, `String (${JSON.stringify(expectedString)})`);
+  }, `Str(${JSON.stringify(expectedString)})`);
 
   return strParser;
 };

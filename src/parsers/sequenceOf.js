@@ -43,7 +43,7 @@ module.exports = (parsers) => {
       result: results,
       error: parseError,
     };
-  }, `SequenceOf (${parsers.map((p) => p.type).join(' -> ')})`);
+  }, `SequenceOf(${parsers.map((p) => p.type).join(' -> ')})`);
 
   return sequenceOfParser;
 };

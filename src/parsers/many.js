@@ -1,8 +1,8 @@
 const Parser = require('../Parser');
 const createError = require('./createError');
 
-module.exports = (parser) => {
-  if (!(parser instanceof Parser)) {
+module.exports = (singleParser) => {
+  if (!(singleParser instanceof Parser)) {
     throw new TypeError('Please provide an instance of the "Parser" class!');
   }
 
@@ -16,7 +16,7 @@ module.exports = (parser) => {
 
     // eslint-disable-next-line no-constant-condition
     while (true) {
-      const nextState = parser.parseFunction(currentState);
+      const nextState = singleParser.parseFunction(currentState);
 
       const {
         targetString,
@@ -33,7 +33,7 @@ module.exports = (parser) => {
             result: null,
             error: createError(
               'ManyParserError',
-              `${parser.type}`,
+              `${singleParser.type}`,
               targetString,
               index,
             ),
@@ -52,7 +52,7 @@ module.exports = (parser) => {
 
       currentState = nextState;
     }
-  }, `Many (${parser.type})`);
+  }, `Many(${singleParser.type})`);
 
   return manyParser;
 };

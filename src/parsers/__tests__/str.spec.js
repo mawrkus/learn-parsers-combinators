@@ -27,9 +27,9 @@ describe('str(expectedString)', () => {
     });
   });
 
-  describe('the parser', () => {
+  describe('the parser returned', () => {
     describe('when parsing an empty target string', () => {
-      it('should return the proper error parser state', () => {
+      it('should return a parser error state', () => {
         const rosebud = str('rosebud');
         const initialState = buildParserState({ targetString: '' });
 
@@ -44,8 +44,8 @@ describe('str(expectedString)', () => {
       });
     });
 
-    describe('when parsing a target string which starts with "expectedString"', () => {
-      it('should return the proper new parser state', () => {
+    describe('when parsing a target string that starts with "expectedString"', () => {
+      it('should return the proper parser state', () => {
         const rosebud = str('rosebud');
         const initialState = buildParserState({ targetString: 'rosebud was its name' });
 
@@ -60,8 +60,8 @@ describe('str(expectedString)', () => {
       });
     });
 
-    describe('when parsing a target string which does not start with "expectedString"', () => {
-      it('should return the proper error parser state', () => {
+    describe('when parsing a target string that does not start with "expectedString"', () => {
+      it('should return a parser error state', () => {
         const rosebud = str('rosebud');
         const initialState = buildParserState({ targetString: 'its name was rosebud' });
 
@@ -76,7 +76,7 @@ describe('str(expectedString)', () => {
       });
     });
 
-    describe('when called on an error parser state', () => {
+    describe('when called on a parser error state', () => {
       it('should do nothing but return it', () => {
         const rosebud = str('rosebud');
         const error = new ParserError('Ooops!');

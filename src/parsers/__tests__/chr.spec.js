@@ -33,9 +33,9 @@ describe('chr(expectedChar)', () => {
     });
   });
 
-  describe('the parser', () => {
+  describe('the parser returned', () => {
     describe('when parsing an empty target string', () => {
-      it('should return the proper error parser state', () => {
+      it('should return a parser error state', () => {
         const x = chr('x');
         const initialState = buildParserState({ targetString: '' });
 
@@ -50,8 +50,8 @@ describe('chr(expectedChar)', () => {
       });
     });
 
-    describe('when parsing a target string which 1st char matches "expectedChar"', () => {
-      it('should return the proper new parser state', () => {
+    describe('when parsing a target string whose first char is "expectedChar"', () => {
+      it('should return the proper parser state', () => {
         const x = chr('x');
         const initialState = buildParserState({ targetString: 'xxx' });
 
@@ -66,8 +66,8 @@ describe('chr(expectedChar)', () => {
       });
     });
 
-    describe('when parsing a target string which 1st char does not match "expectedChar"', () => {
-      it('should return the proper error parser state', () => {
+    describe('when parsing a target string whost first char is not "expectedChar"', () => {
+      it('should return a parser error state', () => {
         const x = chr('x');
         const initialState = buildParserState({ targetString: 'yxx' });
 
@@ -82,7 +82,7 @@ describe('chr(expectedChar)', () => {
       });
     });
 
-    describe('when called on an error parser state', () => {
+    describe('when called on a parser error state', () => {
       it('should do nothing but return it', () => {
         const x = chr('x');
         const error = new ParserError('Ooops!');

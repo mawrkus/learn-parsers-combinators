@@ -31,7 +31,7 @@ module.exports = (expectedChar) => {
       result: expectedChar,
       error: null,
     };
-  }, `Char (${JSON.stringify(expectedChar)})`);
+  }, `Chr(${JSON.stringify(expectedChar)})`);
 
   return chrParser;
 };

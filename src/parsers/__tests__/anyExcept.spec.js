@@ -11,20 +11,20 @@ const buildParserState = (state) => ({
   ...state,
 });
 
-describe('anyExcept(parser)', () => {
+describe('anyExcept(exceptParser)', () => {
   it('should return a parser', () => {
     expect(anyExcept(chr('x'))).toBeInstanceOf(Parser);
   });
 
-  describe('if "parser" is not an instance of the "Parser" class', () => {
+  describe('if "exceptParser" is not an instance of the "Parser" class', () => {
     it('should throw a TypeError', () => {
       expect(() => anyExcept({})).toThrow(TypeError);
     });
   });
 
-  describe('the parser', () => {
-    describe('when run on a target string that can be matched at least once by the parser function', () => {
-      it('should return the proper new parser state', () => {
+  describe('the parser returned', () => {
+    describe('when parsing a target string that can be matched at least once by "exceptParser" ', () => {
+      it('should return the proper parser state', () => {
         const anyExceptX = anyExcept(chr('x'));
         const initialState = buildParserState({ targetString: 'aaax' });
 
@@ -39,8 +39,8 @@ describe('anyExcept(parser)', () => {
       });
     });
 
-    describe('when run on a target string that cannot be matched at least once by the parser function', () => {
-      it('should return the proper new parser state', () => {
+    describe('when parsing a target string that cannot be matched at least once by "exceptParser" ', () => {
+      it('should return the proper parser state', () => {
         const anyExceptX = anyExcept(chr('x'));
         const initialState = buildParserState({ targetString: 'yyz' });
 
@@ -55,7 +55,7 @@ describe('anyExcept(parser)', () => {
       });
     });
 
-    describe('when called on an error parser state', () => {
+    describe('when called on a parser error state', () => {
       it('should do nothing but return it', () => {
         const anyExceptX = anyExcept(chr('x'));
         const error = new ParserError('Ooops!');

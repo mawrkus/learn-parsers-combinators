@@ -30,6 +30,7 @@ module.exports = (parsers) => {
     return {
       ...parserState,
       error: createError(
+        'AnyOfParserError',
         `${parsers.map(({ type }) => type).join(' or ')}`,
         targetString,
         index,

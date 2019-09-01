@@ -1,21 +1,21 @@
 const Parser = require('../Parser');
 
-module.exports = class ManyOrNoneParser extends Parser {
-  constructor(soloParser, type = 'ManyOrNone') {
-    super({ name: 'ManyOrNoneParser', type });
-
-    this._soloParser = soloParser;
+module.exports = (parser) => {
+  if (!(parser instanceof Parser)) {
+    throw new TypeError('Please provide an instance of the "Parser" class!');
   }
 
-  run(parserState) {
-    super.run(parserState);
+  const manyOrNoneParser = new Parser((parserState) => {
+    if (parserState.error) {
+      return parserState;
+    }
 
     let currentState = parserState;
     const results = [];
 
     // eslint-disable-next-line no-constant-condition
     while (true) {
-      const nextState = this._soloParser.run(currentState);
+      const nextState = parser.parseFunction(currentState);
 
       const {
         result,
@@ -31,10 +31,7 @@ module.exports = class ManyOrNoneParser extends Parser {
         // done parsing
         return {
           ...currentState,
-          result: {
-            type: this.type,
-            value: results,
-          },
+          result: results,
           error: null,
         };
       }
@@ -43,5 +40,7 @@ module.exports = class ManyOrNoneParser extends Parser {
 
       currentState = nextState;
     }
-  }
+  }, `ManyOrNone (${parser.type})`);
+
+  return manyOrNoneParser;
 };

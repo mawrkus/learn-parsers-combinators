@@ -2,73 +2,45 @@ const Parser = require('./src/Parser');
 
 /* eslint-disable no-unused-vars */
 const {
+  anyExcept,
+  // anyOf,
   chr,
-  str,
   many,
   manyOrNone,
   sequenceOf,
-  anyExcept,
-  anyOf,
-} = require('./src');
+  str,
+} = require('./src/parsers');
 /* eslint-enable no-unused-vars */
 
-class CsvParser extends Parser {
-  constructor({
-    quote = '"',
-    delimiter = ';',
-    eol = '\n',
-  } = {}) {
-    super({ name: 'CsvParser', type: 'CSV' });
+const fieldParser = sequenceOf([
+  chr('"'),
+  anyExcept(chr('"')),
+  chr('"'),
+]).map((result) => ({
+  type: 'Field',
+  value: result,
+}));
 
-    const quoteParser = chr(quote, 'Quote');
-    const fieldDelimiterParser = chr(delimiter, 'Delimiter');
-    const endOfLineParser = chr(eol, 'EndOfLine');
-
-    const fieldContentParser = anyExcept(quoteParser, 'FieldContent');
-
-    const fieldParser = sequenceOf([
-      quoteParser,
-      fieldContentParser,
-      quoteParser,
-    ], 'Field');
-
-    const lineParser = sequenceOf([
+const lineParser = sequenceOf([
+  fieldParser,
+  manyOrNone(
+    sequenceOf([
+      chr(';'),
       fieldParser,
-      manyOrNone(
-        sequenceOf([
-          fieldDelimiterParser,
-          fieldParser,
-        ]),
-      ),
-      endOfLineParser,
-    ], 'Line');
+    ]),
+  ),
+  chr('\n'),
+]);
 
-    this._parser = many(lineParser);
-  }
+const csvParser = (lineParser);
 
-  run(csv) {
-    console.log('Parsing %s...\n', JSON.stringify(csv));
+const parser = new Parser(csvParser.parseFunction, 'CSVParser');
 
-    const result = this._parser.run({
-      targetString: csv,
-      index: 0,
-      result: null,
-      error: null,
-    });
+const csv = '"tina"\nmarc"\n';
 
-    return {
-      ...result,
-      isComplete: !result.targetString,
-    };
-  }
-}
+console.log('Parsing %s...\n', JSON.stringify(csv));
 
-/* *** */
-
-const csvParser = new CsvParser();
-
-// const parsed = csvParser.run('"Tina";"Marc"\n"Cata";"Carlos"\n');
-const parsed = csvParser.run('"Tina"\n"Carlos"\n'); // FIXME
+const parsed = parser.run(csv);
 
 if (parsed.error) {
   console.error(parsed.error);

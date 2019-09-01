@@ -1,23 +1,40 @@
-const ParserError = require('./ParserError');
-
 module.exports = class Parser {
-  constructor({ name = 'Parser', type = null, debug = false } = {}) {
-    this.name = name;
+  constructor(parseFunction, type) {
+    this.parseFunction = (parserState) => {
+      // console.log('%s -> ', type, parserState);
+      const nextState = parseFunction(parserState);
+      /* if (nextState.error) {
+        console.error(nextState.error);
+      } */
+      return nextState;
+    };
     this.type = type;
-    this._debug = debug;
   }
 
-  run(parserState) {
-    if (this._debug) {
-      console.log(`Running ${this.name} (${this.type}) ->`, JSON.stringify(parserState, null, 1));
-    }
+  run(targetString) {
+    const initialState = {
+      targetString,
+      index: 0,
+      result: null,
+      error: null,
+    };
+
+    return this.parseFunction(initialState);
   }
 
-  createError(expected, received, index) {
-    const expectedMsg = `Expected: ${this.type} ${JSON.stringify(expected)}`;
-    const receivedMsg = `Received: ${JSON.stringify(received)}`;
-    const indexMsg = `          ^ at index ${index}!`;
-    const msg = `\n${expectedMsg}\n${receivedMsg}\n${indexMsg}`;
-    return new ParserError(msg);
+  map(successFunction, errorFunction = (e) => e) {
+    return new Parser((parserState) => {
+      const nextState = this.parseFunction(parserState);
+      const {
+        result,
+        error,
+      } = nextState;
+
+      return {
+        ...nextState,
+        result: !error ? successFunction(result) : result,
+        error: error ? errorFunction(error) : error,
+      };
+    }, this.type);
   }
 };

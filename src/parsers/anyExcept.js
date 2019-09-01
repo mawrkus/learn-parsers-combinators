@@ -1,14 +1,14 @@
 const Parser = require('../Parser');
 
-module.exports = class AnyExceptParser extends Parser {
-  constructor(exceptParser, type = 'AnyExcept') {
-    super({ name: 'AnyExceptParser', type });
-
-    this._exceptParser = exceptParser;
+module.exports = (parser) => {
+  if (!(parser instanceof Parser)) {
+    throw new TypeError('Please provide an instance of the "Parser" class!');
   }
 
-  run(parserState) {
-    super.run(parserState);
+  const anyExceptParser = new Parser((parserState) => {
+    if (parserState.error) {
+      return parserState;
+    }
 
     let result = '';
     let currentState = parserState;
@@ -19,7 +19,7 @@ module.exports = class AnyExceptParser extends Parser {
         error,
         targetString,
         index,
-      } = this._exceptParser.run(currentState);
+      } = parser.parseFunction(currentState);
 
       if (!error || !targetString.length) {
         return currentState;
@@ -31,11 +31,10 @@ module.exports = class AnyExceptParser extends Parser {
         ...currentState,
         targetString: targetString.slice(1),
         index: index + 1,
-        result: {
-          type: this.type,
-          value: result,
-        },
+        result,
       };
     }
-  }
+  }, `AnyExcept (${parser.type})`);
+
+  return anyExceptParser;
 };

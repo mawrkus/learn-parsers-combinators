@@ -6,7 +6,6 @@ const {
   anyOf,
   chr,
   many,
-  manyOrNone,
   sequenceOf,
   str,
 } = require('./src/parsers');

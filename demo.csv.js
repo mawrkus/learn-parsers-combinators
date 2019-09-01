@@ -68,10 +68,8 @@ class CsvParser extends Parser {
   }
 }
 
-const parsed = regex(/[a-z]+$/).run('123 land 78 flat');
-
-// const parser = new CsvParser();
-// const parsed = parser.run('"tina";"cata";"nana"\n"marc";"carlos";"bogdan"\n');
+const parser = new CsvParser();
+const parsed = parser.run('"tina";"cata";"nana"\n"marc";"carlos";"bogdan"\n');
 
 // // const parser = new CsvParser({ quote: false, delimiter: ',', eol: '\r\n' });
 // // const parsed = parser.run('tina,cata\r\nnana,marc\r\ncarlos,bogdan\r\n');

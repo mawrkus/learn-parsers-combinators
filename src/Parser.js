@@ -11,10 +11,10 @@ module.exports = class Parser {
     this.type = type;
   }
 
-  run(targetString) {
+  run(originalString) {
     const initialState = {
-      originalString: targetString,
-      targetString,
+      originalString,
+      targetString: originalString,
       index: 0,
       result: null,
       error: null,

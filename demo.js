@@ -3,7 +3,7 @@ const Parser = require('./src/Parser');
 /* eslint-disable no-unused-vars */
 const {
   anyExcept,
-  // anyOf,
+  anyOf,
   chr,
   many,
   manyOrNone,
@@ -23,6 +23,7 @@ const fieldParser = sequenceOf([
 
 const lineParser = sequenceOf([
   fieldParser,
+  // FIXME
   manyOrNone(
     sequenceOf([
       chr(';'),

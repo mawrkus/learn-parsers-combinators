@@ -25,6 +25,7 @@ module.exports = (parser) => {
       if (error) {
         // we don't expect any result
         if (!results.length) {
+          // FIXME: returning this in sequenceOf duplicates the results
           return currentState;
         }
 

@@ -58,7 +58,7 @@ describe('many(singleParser)', () => {
     describe('when called on a parser error state', () => {
       it('should do nothing but return it', () => {
         const manyX = many(chr('x'));
-        const error = new ParserError('Ooops!');
+        const error = new ParserError('ParserError', 'Ooops!', '', {});
         const initialState = buildParserState({ targetString: 'xxxy', error });
 
         const newParserState = manyX.parseFunction(initialState);

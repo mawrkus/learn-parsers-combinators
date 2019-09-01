@@ -9,7 +9,6 @@ module.exports = (regex, capture = false) => {
   const regexParser = new Parser((parserState) => {
     const {
       targetString,
-      index,
       error,
     } = parserState;
 

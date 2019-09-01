@@ -58,7 +58,7 @@ describe('anyOf(parsers)', () => {
     describe('when called on a parser error state', () => {
       it('should do nothing but return it', () => {
         const xyz = anyOf([chr('x'), chr('y'), chr('z')]);
-        const error = new ParserError('Ooops!');
+        const error = new ParserError('ParserError', 'Ooops!', '', {});
         const initialState = buildParserState({ targetString: 'xyz', error });
 
         const newParserState = xyz.parseFunction(initialState);

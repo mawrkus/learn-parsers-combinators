@@ -85,7 +85,7 @@ describe('chr(expectedChar)', () => {
     describe('when called on a parser error state', () => {
       it('should do nothing but return it', () => {
         const x = chr('x');
-        const error = new ParserError('Ooops!');
+        const error = new ParserError('ParserError', 'Ooops!', '', {});
         const initialState = buildParserState({ targetString: 'xxx', error });
 
         const newParserState = x.parseFunction(initialState);

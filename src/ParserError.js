@@ -1,9 +1,18 @@
 module.exports = class ParserError extends Error {
-  constructor(type, msg, expected, received, index) {
+  constructor(type, msg, expected, parserState) {
     super(msg);
+
+    const {
+      originalString: input,
+      targetString: actual,
+      index,
+    } = parserState;
+
     this.name = type || 'ParserError';
+    this.input = input;
+    this.inputlLength = input ? input.length : 0;
     this.expected = expected;
-    this.received = received;
+    this.actual = actual;
     this.index = index;
   }
 };

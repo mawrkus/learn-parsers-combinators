@@ -6,6 +6,7 @@ const {
   anyOf,
   chr,
   many,
+  manyOrNone,
   regex,
   sequenceOf,
   str,
@@ -32,27 +33,16 @@ class CsvParser extends Parser {
       ])
         .map((result) => result[1]);
 
-    const lineParser = anyOf([
-      sequenceOf([
-        fieldParser,
-        eolParser,
-      ])
-        .map((result) => result[0]),
-      sequenceOf([
-        fieldParser,
-        many(
-          sequenceOf([
-            delimiterParser,
-            fieldParser,
-          ]),
-        ),
-        eolParser,
-      ])
-        .map((results) => [
-          results[0],
-          ...results[1].map((r) => r[1]),
-        ]),
-    ]);
+    const lineParser = sequenceOf([
+      fieldParser,
+      manyOrNone(
+        sequenceOf([
+          delimiterParser,
+          fieldParser,
+        ]).map((results) => results[1]),
+      ),
+      eolParser,
+    ]).map((results) => [results[0], ...results[1]]);
 
     const csvParser = many(lineParser).map((results) => ({
       type: 'CSV',
@@ -69,10 +59,11 @@ class CsvParser extends Parser {
 }
 
 const parser = new CsvParser();
-const parsed = parser.run('"tina";"cata";"nana"\n"marc";"carlos";"bogdan"\n');
+const parsed = parser.run('"tina";"marc"\n"cata";"carlos"\n');
+// const parsed = parser.run('"tina"\n"cata"\n');
 
-// // const parser = new CsvParser({ quote: false, delimiter: ',', eol: '\r\n' });
-// // const parsed = parser.run('tina,cata\r\nnana,marc\r\ncarlos,bogdan\r\n');
+// const parser = new CsvParser({ quote: false, delimiter: ',', eol: '\r\n' });
+// const parsed = parser.run('tina,cata\r\nnana,marc\r\ncarlos,bogdan\r\n');
 
 if (parsed.error) {
   console.error(parsed.error);

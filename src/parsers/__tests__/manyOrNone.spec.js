@@ -1,4 +1,4 @@
-const anyExcept = require('../anyExcept');
+const manyOrNone = require('../manyOrNone');
 const chr = require('../chr');
 const Parser = require('../../Parser');
 const ParserError = require('../../ParserError');
@@ -11,45 +11,45 @@ const buildParserState = (state) => ({
   ...state,
 });
 
-describe('anyExcept(exceptParser)', () => {
+describe('manyOrNone(singleParser)', () => {
   it('should return a parser', () => {
-    expect(anyExcept(chr('x'))).toBeInstanceOf(Parser);
+    expect(manyOrNone(chr('x'))).toBeInstanceOf(Parser);
   });
 
-  describe('if "exceptParser" is not an instance of the "Parser" class', () => {
+  describe('if "singleParser" is not an instance of the "Parser" class', () => {
     it('should throw a TypeError', () => {
-      expect(() => anyExcept({})).toThrow(TypeError);
+      expect(() => manyOrNone({})).toThrow(TypeError);
     });
   });
 
   describe('the parser returned', () => {
-    describe('when parsing a target string that can be matched at least once by "exceptParser" ', () => {
+    describe('when parsing a target string that can be matched at least once by "singleParser" ', () => {
       it('should return the proper parser state', () => {
-        const anyExceptX = anyExcept(chr('x'));
-        const initialState = buildParserState({ targetString: 'aaax' });
+        const manyOrNoneX = manyOrNone(chr('x'));
+        const initialState = buildParserState({ targetString: 'xxxy' });
 
-        const newParserState = anyExceptX.parseFunction(initialState);
+        const newParserState = manyOrNoneX.parseFunction(initialState);
 
         expect(newParserState).toEqual({
-          targetString: 'x',
+          targetString: 'y',
           index: 3,
-          result: 'aaa',
+          result: ['x', 'x', 'x'],
           error: null,
         });
       });
     });
 
-    describe('when parsing a target string that cannot be matched at least once by "exceptParser" ', () => {
+    describe('when parsing a target string that cannot be matched at least once by "singleParser" ', () => {
       it('should return the proper parser state', () => {
-        const anyExceptX = anyExcept(chr('x'));
+        const manyOrNoneX = manyOrNone(chr('x'));
         const initialState = buildParserState({ targetString: 'yyz' });
 
-        const newParserState = anyExceptX.parseFunction(initialState);
+        const newParserState = manyOrNoneX.parseFunction(initialState);
 
         expect(newParserState).toEqual({
-          targetString: '',
-          index: 3,
-          result: 'yyz',
+          targetString: 'yyz',
+          index: 0,
+          result: [],
           error: null,
         });
       });
@@ -57,11 +57,11 @@ describe('anyExcept(exceptParser)', () => {
 
     describe('when called on a parser error state', () => {
       it('should do nothing but return it', () => {
-        const anyExceptX = anyExcept(chr('x'));
+        const manyOrNoneX = manyOrNone(chr('x'));
         const error = new ParserError('ParserError', 'Ooops!', '', {});
         const initialState = buildParserState({ targetString: 'xxxy', error });
 
-        const newParserState = anyExceptX.parseFunction(initialState);
+        const newParserState = manyOrNoneX.parseFunction(initialState);
 
         expect(newParserState).toEqual(initialState);
       });

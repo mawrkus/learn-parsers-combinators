@@ -120,7 +120,7 @@ describe('regex(regex, capture = false)', () => {
     describe('when called on a parser error state', () => {
       it('should do nothing but return it', () => {
         const identifier = regex(/\w+/);
-        const error = new ParserError('Ooops!');
+        const error = new ParserError('ParserError', 'Ooops!', '', {});
         const initialState = buildParserState({ targetString: 'Kode9 (=)', error });
 
         const newParserState = identifier.parseFunction(initialState);

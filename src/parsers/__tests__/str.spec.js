@@ -79,7 +79,7 @@ describe('str(expectedString)', () => {
     describe('when called on a parser error state', () => {
       it('should do nothing but return it', () => {
         const rosebud = str('rosebud');
-        const error = new ParserError('Ooops!');
+        const error = new ParserError('ParserError', 'Ooops!', '', {});
         const initialState = buildParserState({ targetString: 'xxx', error });
 
         const newParserState = rosebud.parseFunction(initialState);

@@ -16,17 +16,10 @@ module.exports = (regex, capture = false) => {
       return parserState;
     }
 
-    if (!targetString || !targetString.length) {
-      return {
-        ...parserState,
-        error: createError('RegexParserError', regex, parserState),
-      };
-    }
-
     const matches = targetString.match(regex);
     const matchedString = capture ? matches && matches[1] : matches && matches[0];
 
-    if (!matchedString) {
+    if (!matches || typeof matchedString === 'undefined') {
       return {
         ...parserState,
         error: createError('RegexParserError', regex, parserState),

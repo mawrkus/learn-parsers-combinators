@@ -21,12 +21,6 @@ describe('str(expectedString)', () => {
     });
   });
 
-  describe('if "expectedString" is an empty string', () => {
-    it('should throw a TypeError', () => {
-      expect(() => str('')).toThrow(TypeError);
-    });
-  });
-
   describe('the parser returned', () => {
     describe('when parsing an empty target string', () => {
       it('should return a parser error state', () => {

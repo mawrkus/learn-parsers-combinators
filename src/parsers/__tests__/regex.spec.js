@@ -23,22 +23,6 @@ describe('regex(regex, capture = false)', () => {
   });
 
   describe('the parser returned', () => {
-    describe('when parsing an empty target string', () => {
-      it('should return a parser error state', () => {
-        const identifier = regex(/\w+/);
-        const initialState = buildParserState({ targetString: '' });
-
-        const newParserState = identifier.parseFunction(initialState);
-
-        expect(newParserState).toEqual({
-          targetString: '',
-          index: 0,
-          result: null,
-          error: expect.any(ParserError),
-        });
-      });
-    });
-
     describe('if "capture" is false', () => {
       describe('when parsing a target string that "regex" matches', () => {
         it('should return the proper parser state (/\\w+/)', () => {
@@ -83,6 +67,36 @@ describe('regex(regex, capture = false)', () => {
           });
         });
       });
+
+      describe('when parsing an empty target string', () => {
+        it('should return the proper parser state (/[0-9]*/)', () => {
+          const digits = regex(/[0-9]*/);
+          const initialState = buildParserState({ targetString: '' });
+
+          const newParserState = digits.parseFunction(initialState);
+
+          expect(newParserState).toEqual({
+            targetString: '',
+            index: 0,
+            result: '',
+            error: null,
+          });
+        });
+
+        it('should return the proper parser state (/[^0-9]*/)', () => {
+          const digits = regex(/[^0-9]*/);
+          const initialState = buildParserState({ targetString: '' });
+
+          const newParserState = digits.parseFunction(initialState);
+
+          expect(newParserState).toEqual({
+            targetString: '',
+            index: 0,
+            result: '',
+            error: null,
+          });
+        });
+      });
     });
 
     describe('if "capture" is true', () => {
@@ -97,6 +111,36 @@ describe('regex(regex, capture = false)', () => {
           index: 17,
           result: '9pm',
           error: null,
+        });
+      });
+
+      describe('when parsing an empty target string', () => {
+        it('should return the proper parser state (/[0-9]*/)', () => {
+          const digits = regex(/([0-9]*)/, true);
+          const initialState = buildParserState({ targetString: '' });
+
+          const newParserState = digits.parseFunction(initialState);
+
+          expect(newParserState).toEqual({
+            targetString: '',
+            index: 0,
+            result: '',
+            error: null,
+          });
+        });
+
+        it('should return the proper parser state (/[^0-9]*/)', () => {
+          const digits = regex(/([^0-9]*)/, true);
+          const initialState = buildParserState({ targetString: '' });
+
+          const newParserState = digits.parseFunction(initialState);
+
+          expect(newParserState).toEqual({
+            targetString: '',
+            index: 0,
+            result: '',
+            error: null,
+          });
         });
       });
     });

@@ -1,6 +1,7 @@
 const anyExcept = require('./anyExcept');
 const anyOf = require('./anyOf');
 const chr = require('./chr');
+const lazy = require('./lazy');
 const many = require('./many');
 const manyOrNone = require('./manyOrNone');
 const regex = require('./regex');
@@ -11,6 +12,7 @@ module.exports = {
   anyExcept,
   anyOf,
   chr,
+  lazy,
   many,
   manyOrNone,
   regex,

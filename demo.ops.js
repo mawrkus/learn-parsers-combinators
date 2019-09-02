@@ -5,6 +5,7 @@ const {
   anyExcept,
   anyOf,
   chr,
+  lazy,
   many,
   manyOrNone,
   regex,
@@ -20,11 +21,6 @@ const between = (leftParser, rightParser) => (contentParser) => sequenceOf([
 ])
   .map((result) => result[1]);
 
-const lazyParser = (parserThunk) => new Parser((parserState) => {
-  const parser = parserThunk();
-  return parser.parseFunction(parserState);
-});
-
 class ExpressionParser extends Parser {
   constructor() {
     const lParenParser = regex(/^[ ]*\([ ]*/);
@@ -33,7 +29,7 @@ class ExpressionParser extends Parser {
     const operatorParser = regex(/^[ ]*(\+|-|\*|\/)[ ]*/, true);
     const numberParser = regex(/^[ ]*([0-9]+)[ ]*/, true).map((n) => Number(n));
 
-    const expressionParser = lazyParser(() => anyOf([
+    const expressionParser = lazy(() => anyOf([
       numberParser,
       operationParser, // eslint-disable-line
     ]));

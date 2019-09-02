@@ -8,7 +8,8 @@
     "pretest": "npm run lint",
     "test": "jest",
     "tdd": "jest --watch --notify",
-    "demo:csv": "clear && node demo.csv.js"
+    "demo:csv": "clear && node demo.csv.js",
+    "demo:ops": "clear && node demo.ops.js"
   },
   "author": "mawrkus <web@sparring-partner.be>",
   "license": "MIT",

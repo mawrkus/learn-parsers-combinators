@@ -31,11 +31,11 @@ class CsvParser extends Parser {
     const delimiterParser = chr(delimiter);
     const eolParser = str(eol);
 
-    const betweenQuotes = between(quoteParser, quoteParser);
+    const betweenQuotesParser = between(quoteParser, quoteParser);
 
     const fieldParser = quote === false
       ? regex(new RegExp(`[^${delimiter}${eol}]*`))
-      : betweenQuotes(regex(new RegExp(`[^${quote}$]*`)));
+      : betweenQuotesParser(regex(new RegExp(`[^${quote}$]*`)));
 
     const lineParser = sequenceOf([
       fieldParser,

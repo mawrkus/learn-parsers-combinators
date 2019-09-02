@@ -13,25 +13,29 @@ const {
 } = require('./src/parsers');
 /* eslint-enable no-unused-vars */
 
+const between = (leftParser, rightParser) => (contentParser) => sequenceOf([
+  leftParser,
+  contentParser,
+  rightParser,
+])
+  .map((result) => result[1]);
+
 class CsvParser extends Parser {
-  constructor({ quote = '"', delimiter = ';', eol = '\n' } = {}) {
+  constructor({
+    quote = '"',
+    delimiter = ';',
+    eol = '\n',
+    headers = false,
+  } = {}) {
     const quoteParser = quote !== false ? chr(quote) : null;
     const delimiterParser = chr(delimiter);
     const eolParser = str(eol);
 
+    const betweenQuotes = between(quoteParser, quoteParser);
+
     const fieldParser = quote === false
-      ? anyExcept(
-        anyOf([
-          delimiterParser,
-          eolParser,
-        ]),
-      )
-      : sequenceOf([
-        quoteParser,
-        anyExcept(quoteParser),
-        quoteParser,
-      ])
-        .map((result) => result[1]);
+      ? regex(new RegExp(`[^${delimiter}${eol}]*`))
+      : betweenQuotes(regex(new RegExp(`[^${quote}$]*`)));
 
     const lineParser = sequenceOf([
       fieldParser,
@@ -39,16 +43,36 @@ class CsvParser extends Parser {
         sequenceOf([
           delimiterParser,
           fieldParser,
-        ]).map((results) => results[1]),
+        ])
+          .map(([, field]) => field),
       ),
       eolParser,
-    ]).map((results) => [results[0], ...results[1]]);
+    ])
+      .map(([field, optionalFields]) => [field, ...optionalFields]);
 
-    const csvParser = many(lineParser).map((results) => ({
-      type: 'CSV',
-      linesCount: results.length,
-      value: results,
-    }));
+    const csvParser = headers
+      ? sequenceOf([
+        lineParser,
+        many(lineParser),
+      ])
+        .map(([headerLine, lines]) => {
+          const value = lines.map((line) => line.reduce((acc, field, i) => ({
+            ...acc,
+            [headerLine[i]]: field,
+          }), {}));
+
+          return {
+            type: 'CSV',
+            linesCount: lines.length,
+            value,
+          };
+        })
+      : many(lineParser)
+        .map((lines) => ({
+          type: 'CSV',
+          linesCount: lines.length,
+          value: lines,
+        }));
 
     super(csvParser.parseFunction, 'CSVParser');
   }
@@ -58,12 +82,24 @@ class CsvParser extends Parser {
   }
 }
 
-const parser = new CsvParser();
-const parsed = parser.run('"tina";"marc"\n"cata";"carlos"\n');
+// const parser = new CsvParser();
+// const parsed = parser.run('"tina";"marc"\n"cata";"carlos"\n');
 // const parsed = parser.run('"tina"\n"cata"\n');
 
-// const parser = new CsvParser({ quote: false, delimiter: ',', eol: '\r\n' });
-// const parsed = parser.run('tina,cata\r\nnana,marc\r\ncarlos,bogdan\r\n');
+const parser = new CsvParser({
+  quote: false,
+  delimiter: ',',
+  eol: '\n',
+  headers: true,
+});
+const parsed = parser.run(`who,ok?,when?
+tina,yes,now
+cata,yes,later
+nana,no,now
+marc,yes,later
+carlos,yes,later
+bogdan,no,now
+`);
 
 if (parsed.error) {
   console.error(parsed.error);

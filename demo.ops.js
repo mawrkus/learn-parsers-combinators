@@ -5,6 +5,7 @@ const {
   anyExcept,
   anyOf,
   chr,
+  eoi,
   lazy,
   many,
   manyOrNone,

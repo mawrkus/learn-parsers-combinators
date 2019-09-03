@@ -5,6 +5,7 @@ const {
   anyExcept,
   anyOf,
   chr,
+  eoi,
   lazy,
   many,
   manyOrNone,
@@ -31,6 +32,7 @@ class CsvParser extends Parser {
     const quoteParser = quote !== false ? chr(quote) : null;
     const delimiterParser = chr(delimiter);
     const eolParser = str(eol);
+    const eoiParser = eoi();
 
     const betweenQuotesParser = between(quoteParser, quoteParser);
 
@@ -47,7 +49,10 @@ class CsvParser extends Parser {
         ])
           .map(([, field]) => field),
       ),
-      eolParser,
+      anyOf([
+        eolParser,
+        eoiParser,
+      ]),
     ])
       .map(([field, optionalFields]) => [field, ...optionalFields]);
 
@@ -99,8 +104,7 @@ cata,yes,later
 nana,no,now
 marc,yes,later
 carlos,yes,later
-bogdan,no,now
-`);
+bogdan,no,now`);
 
 if (parsed.error) {
   console.error(parsed.error);

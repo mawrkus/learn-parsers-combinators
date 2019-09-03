@@ -21,26 +21,16 @@ describe('str(expectedString)', () => {
     });
   });
 
+  describe('if "expectedString" is an empty string', () => {
+    it('should throw a TypeError', () => {
+      expect(() => str('')).toThrow(TypeError);
+    });
+  });
+
   describe('the parser returned', () => {
     describe('when parsing an empty target string', () => {
       it('should return a parser error state', () => {
         const rosebud = str('rosebud');
-        const initialState = buildParserState({ targetString: '' });
-
-        const newParserState = rosebud.parseFunction(initialState);
-
-        expect(newParserState).toEqual({
-          targetString: '',
-          index: 0,
-          result: null,
-          error: expect.any(ParserError),
-        });
-      });
-    });
-
-    describe('when parsing an empty target string with an empty "expectedString"', () => {
-      it('should return a parser error state', () => {
-        const rosebud = str('');
         const initialState = buildParserState({ targetString: '' });
 
         const newParserState = rosebud.parseFunction(initialState);

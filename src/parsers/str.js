@@ -2,8 +2,8 @@ const Parser = require('../Parser');
 const ParserError = require('../ParserError');
 
 module.exports = (expectedString) => {
-  if (typeof expectedString !== 'string') {
-    throw new TypeError('Please provide a valid string!');
+  if (typeof expectedString !== 'string' || !expectedString.length) {
+    throw new TypeError('Please provide a valid non-empty string!');
   }
 
   const expectedStringLength = expectedString.length;

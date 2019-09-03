@@ -28,7 +28,7 @@ class ExpressionParser extends Parser {
     const rParenParser = regex(/^[ ]*\)[ ]*/);
     const betweenParensParser = between(lParenParser, rParenParser);
     const operatorParser = regex(/^[ ]*(\+|-|\*|\/)[ ]*/, true);
-    const numberParser = regex(/^[ ]*([0-9]+)[ ]*/, true).map((n) => Number(n));
+    const numberParser = regex(/^[ ]*((-|\+)?[0-9]+)[ ]*/, true).map((n) => Number(n));
 
     const expressionParser = lazy(() => anyOf([
       numberParser,
@@ -58,7 +58,7 @@ class ExpressionParser extends Parser {
 }
 
 const parser = new ExpressionParser();
-const parsed = parser.run('((6 - (100 / 25)) * (1 + 2))');
+const parsed = parser.run('((6 - (100 / -25)) * (1 + 2))');
 
 if (parsed.error) {
   console.error(parsed.error);

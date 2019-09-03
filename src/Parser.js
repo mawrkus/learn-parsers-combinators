@@ -1,11 +1,15 @@
 module.exports = class Parser {
   constructor(parseFunction, type) {
     this.parseFunction = (parserState) => {
-      // console.log('%s -> ', type, parserState);
+      // console.log('preParse: %s -> ', type, parserState);
+
       const nextState = parseFunction(parserState);
-      /* if (nextState.error) {
+
+      /* console.log('postParse: %s -> ', type, nextState);
+      if (nextState.error) {
         console.error(nextState.error);
       } */
+
       return nextState;
     };
     this.type = type;

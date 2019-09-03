@@ -69,7 +69,7 @@ describe('regex(regex, capture = false)', () => {
       });
 
       describe('when parsing an empty target string', () => {
-        it('should return the proper parser state (/[0-9]*/)', () => {
+        it('should return a parser error state', () => {
           const digits = regex(/[0-9]*/);
           const initialState = buildParserState({ targetString: '' });
 
@@ -78,22 +78,8 @@ describe('regex(regex, capture = false)', () => {
           expect(newParserState).toEqual({
             targetString: '',
             index: 0,
-            result: '',
-            error: null,
-          });
-        });
-
-        it('should return the proper parser state (/[^0-9]*/)', () => {
-          const digits = regex(/[^0-9]*/);
-          const initialState = buildParserState({ targetString: '' });
-
-          const newParserState = digits.parseFunction(initialState);
-
-          expect(newParserState).toEqual({
-            targetString: '',
-            index: 0,
-            result: '',
-            error: null,
+            result: null,
+            error: expect.any(ParserError),
           });
         });
       });
@@ -124,22 +110,8 @@ describe('regex(regex, capture = false)', () => {
           expect(newParserState).toEqual({
             targetString: '',
             index: 0,
-            result: '',
-            error: null,
-          });
-        });
-
-        it('should return the proper parser state (/[^0-9]*/)', () => {
-          const digits = regex(/([^0-9]*)/, true);
-          const initialState = buildParserState({ targetString: '' });
-
-          const newParserState = digits.parseFunction(initialState);
-
-          expect(newParserState).toEqual({
-            targetString: '',
-            index: 0,
-            result: '',
-            error: null,
+            result: null,
+            error: expect.any(ParserError),
           });
         });
       });

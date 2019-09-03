@@ -1,5 +1,5 @@
 const Parser = require('../Parser');
-const createError = require('./createError');
+const ParserError = require('../ParserError');
 
 module.exports = (singleParser) => {
   if (!(singleParser instanceof Parser)) {
@@ -29,7 +29,7 @@ module.exports = (singleParser) => {
           return {
             ...currentState,
             result: null,
-            error: createError(
+            error: ParserError.create(
               'ManyParserError',
               `${singleParser.type}`,
               nextState,

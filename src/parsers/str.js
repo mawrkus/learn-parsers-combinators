@@ -1,5 +1,5 @@
 const Parser = require('../Parser');
-const createError = require('./createError');
+const ParserError = require('../ParserError');
 
 module.exports = (expectedString) => {
   if (typeof expectedString !== 'string') {
@@ -19,10 +19,10 @@ module.exports = (expectedString) => {
       return parserState;
     }
 
-    if (!targetString.startsWith(expectedString)) {
+    if (!targetString.length || !targetString.startsWith(expectedString)) {
       return {
         ...parserState,
-        error: createError('StringParserError', expectedString, parserState),
+        error: ParserError.create('StringParserError', expectedString, parserState),
       };
     }
 

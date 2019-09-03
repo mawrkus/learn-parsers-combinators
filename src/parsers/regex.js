@@ -1,5 +1,5 @@
 const Parser = require('../Parser');
-const createError = require('./createError');
+const ParserError = require('../ParserError');
 
 module.exports = (regex, capture = false) => {
   if (!(regex instanceof RegExp)) {
@@ -16,13 +16,20 @@ module.exports = (regex, capture = false) => {
       return parserState;
     }
 
+    if (!targetString.length) {
+      return {
+        ...parserState,
+        error: ParserError.create('RegexParserError', regex, parserState),
+      };
+    }
+
     const matches = targetString.match(regex);
     const matchedString = capture ? matches && matches[1] : matches && matches[0];
 
     if (!matches || typeof matchedString === 'undefined') {
       return {
         ...parserState,
-        error: createError('RegexParserError', regex, parserState),
+        error: ParserError.create('RegexParserError', regex, parserState),
       };
     }
 

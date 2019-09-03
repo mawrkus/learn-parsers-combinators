@@ -1,5 +1,5 @@
 const Parser = require('../Parser');
-const createError = require('./createError');
+const ParserError = require('../ParserError');
 
 module.exports = (parsers) => {
   if (!parsers.every((p) => p instanceof Parser)) {
@@ -24,7 +24,7 @@ module.exports = (parsers) => {
 
     return {
       ...parserState,
-      error: createError(
+      error: ParserError.create(
         'AnyOfParserError',
         `${parsers.map(({ type }) => type).join(' or ')}`,
         parserState,

@@ -38,18 +38,18 @@ describe('str(expectedString)', () => {
       });
     });
 
-    describe('when parsing a target string that starts with "expectedString"', () => {
-      it('should return the proper parser state', () => {
-        const rosebud = str('rosebud');
-        const initialState = buildParserState({ targetString: 'rosebud was its name' });
+    describe('when parsing an empty target string with an empty "expectedString"', () => {
+      it('should return a parser error state', () => {
+        const rosebud = str('');
+        const initialState = buildParserState({ targetString: '' });
 
         const newParserState = rosebud.parseFunction(initialState);
 
         expect(newParserState).toEqual({
-          targetString: ' was its name',
-          index: 7,
-          result: 'rosebud',
-          error: null,
+          targetString: '',
+          index: 0,
+          result: null,
+          error: expect.any(ParserError),
         });
       });
     });
@@ -66,6 +66,22 @@ describe('str(expectedString)', () => {
           index: 0,
           result: null,
           error: expect.any(ParserError),
+        });
+      });
+    });
+
+    describe('when parsing a target string that starts with "expectedString"', () => {
+      it('should return the proper parser state', () => {
+        const rosebud = str('rosebud');
+        const initialState = buildParserState({ targetString: 'rosebud was its name' });
+
+        const newParserState = rosebud.parseFunction(initialState);
+
+        expect(newParserState).toEqual({
+          targetString: ' was its name',
+          index: 7,
+          result: 'rosebud',
+          error: null,
         });
       });
     });

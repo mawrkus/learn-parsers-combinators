@@ -3,13 +3,7 @@ const chr = require('../chr');
 const Parser = require('../../Parser');
 const ParserError = require('../../ParserError');
 
-const buildParserState = (state) => ({
-  targetString: '',
-  index: 0,
-  result: null,
-  error: null,
-  ...state,
-});
+const buildParserState = require('./buildParserState');
 
 describe('many(singleParser)', () => {
   it('should return a parser', () => {

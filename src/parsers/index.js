@@ -6,6 +6,7 @@ const lazy = require('./lazy');
 const many = require('./many');
 const manyOrNone = require('./manyOrNone');
 const regex = require('./regex');
+const sepBy = require('./sepBy');
 const sequenceOf = require('./sequenceOf');
 const str = require('./str');
 
@@ -18,6 +19,7 @@ module.exports = {
   many,
   manyOrNone,
   regex,
+  sepBy,
   sequenceOf,
   str,
 };

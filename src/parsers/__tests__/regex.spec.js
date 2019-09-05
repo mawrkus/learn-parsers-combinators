@@ -3,13 +3,7 @@ const regex = require('../regex');
 const Parser = require('../../Parser');
 const ParserError = require('../../ParserError');
 
-const buildParserState = (state) => ({
-  targetString: '',
-  index: 0,
-  result: null,
-  error: null,
-  ...state,
-});
+const buildParserState = require('./buildParserState');
 
 describe('regex(regex, capture = false)', () => {
   it('should return a parser', () => {

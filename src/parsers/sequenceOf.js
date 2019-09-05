@@ -26,7 +26,7 @@ module.exports = (parsers) => {
       if (error) {
         parseError = ParserError.create(
           'SequenceOfParserError',
-          `${parsers.map((p, j) => `${p.type} (${j >= i ? 'ko' : 'ok'})`).join(' -> ')}`,
+          `${parsers.map((p, j) => `${p.type} (${j >= i ? 'KO' : 'ok'})`).join(' -> ')}`,
           currentState,
         );
         break;

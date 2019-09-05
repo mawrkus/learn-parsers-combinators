@@ -40,23 +40,9 @@ module.exports = (sepParser) => {
 
         currentState = sepParser.parseFunction(currentState);
 
-        if (!currentState.error) {
-          continue; // eslint-disable-line no-continue
-        }
-
-        if (!currentState.targetString.length) {
+        if (currentState.error) {
           break;
         }
-
-        return {
-          ...currentState,
-          result: null,
-          error: ParserError.create(
-            `SepByParserError(${sepParser.type})(${valueParser.type})`,
-            `${sepParser.type}`,
-            currentState,
-          ),
-        };
       }
 
       return {

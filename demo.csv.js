@@ -10,6 +10,7 @@ const {
   many,
   manyOrNone,
   regex,
+  sepBy,
   sequenceOf,
   str,
 } = require('./src/parsers');
@@ -30,31 +31,23 @@ class CsvParser extends Parser {
     headers = false,
   } = {}) {
     const quoteParser = quote !== false ? chr(quote) : null;
+    const betweenQuotesParser = between(quoteParser, quoteParser);
     const delimiterParser = chr(delimiter);
     const eolParser = str(eol);
     const eoiParser = eoi();
 
-    const betweenQuotesParser = between(quoteParser, quoteParser);
-
     const fieldParser = quote === false
-      ? regex(new RegExp(`[^${delimiter}${eol}]*`))
-      : betweenQuotesParser(regex(new RegExp(`[^${quote}$]*`)));
+      ? regex(new RegExp(`[^${delimiter}${eol}]+`))
+      : betweenQuotesParser(regex(new RegExp(`[^${quote}]+`)));
 
     const lineParser = sequenceOf([
-      fieldParser,
-      manyOrNone(
-        sequenceOf([
-          delimiterParser,
-          fieldParser,
-        ])
-          .map(([, field]) => field),
-      ),
+      sepBy(delimiterParser)(fieldParser),
       anyOf([
         eolParser,
         eoiParser,
       ]),
     ])
-      .map(([field, optionalFields]) => [field, ...optionalFields]);
+      .map(([fields]) => fields);
 
     const csvParser = headers
       ? sequenceOf([
@@ -88,9 +81,8 @@ class CsvParser extends Parser {
   }
 }
 
-// const parser = new CsvParser();
-// const parsed = parser.run('"tina";"marc"\n"cata";"carlos"\n');
-// const parsed = parser.run('"tina"\n"cata"\n');
+/* const parser = new CsvParser();
+const parsed = parser.run('"tina";"marc"\n"cata";"carlos"\n'); */
 
 const parser = new CsvParser({
   quote: false,
@@ -98,13 +90,15 @@ const parser = new CsvParser({
   eol: '\n',
   headers: true,
 });
-const parsed = parser.run(`who,ok?,when?
+const parsed = parser.run(`
+who,ok?,when?
 tina,yes,now
 cata,yes,later
 nana,no,now
 marc,yes,later
 carlos,yes,later
-bogdan,no,now`);
+bogdan,no,now
+`);
 
 if (parsed.error) {
   console.error(parsed.error);

@@ -10,6 +10,7 @@ const {
   many,
   manyOrNone,
   regex,
+  sepBy,
   sequenceOf,
   str,
 } = require('./src/parsers');

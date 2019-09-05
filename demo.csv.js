@@ -55,7 +55,7 @@ class CsvParser extends Parser {
         many(lineParser),
       ])
         .map(([headerLine, lines]) => {
-          const value = lines.map((line) => line.reduce((acc, field, i) => ({
+          const objects = lines.map((line) => line.reduce((acc, field, i) => ({
             ...acc,
             [headerLine[i]]: field,
           }), {}));
@@ -63,7 +63,7 @@ class CsvParser extends Parser {
           return {
             type: 'CSV',
             linesCount: lines.length,
-            value,
+            value: objects,
           };
         })
       : many(lineParser)

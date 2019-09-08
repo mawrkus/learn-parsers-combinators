@@ -8,7 +8,7 @@ module.exports = (regex, capture = false) => {
 
   const regexParser = new Parser((parserState) => {
     const {
-      targetString,
+      remainingInput,
       error,
     } = parserState;
 
@@ -16,14 +16,14 @@ module.exports = (regex, capture = false) => {
       return parserState;
     }
 
-    if (!targetString.length) {
+    if (!remainingInput.length) {
       return {
         ...parserState,
         error: ParserError.create('RegexParserError', regex, parserState),
       };
     }
 
-    const matches = targetString.match(regex);
+    const matches = remainingInput.match(regex);
     const matchedString = capture ? matches && matches[1] : matches && matches[0];
 
     if (!matches || typeof matchedString === 'undefined') {
@@ -33,13 +33,14 @@ module.exports = (regex, capture = false) => {
       };
     }
 
+    // TODO: err if newIndex = 0
     const newIndex = capture
       ? matches[0].length
       : matches.index + matchedString.length;
 
     return {
       ...parserState,
-      targetString: targetString.slice(newIndex),
+      remainingInput: remainingInput.slice(newIndex),
       index: newIndex,
       result: matchedString,
       error: null,

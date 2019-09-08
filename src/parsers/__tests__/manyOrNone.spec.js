@@ -18,14 +18,14 @@ describe('manyOrNone(singleParser)', () => {
 
   describe('the parser returned', () => {
     describe('when parsing a target string that can be matched at least once by "singleParser" ', () => {
-      it('should return the proper parser state', () => {
+      it('should return the correct parser state', () => {
         const manyOrNoneX = manyOrNone(chr('x'));
-        const initialState = buildParserState({ targetString: 'xxxy' });
+        const initialState = buildParserState({ remainingInput: 'xxxy' });
 
         const newParserState = manyOrNoneX.parseFunction(initialState);
 
         expect(newParserState).toEqual({
-          targetString: 'y',
+          remainingInput: 'y',
           index: 3,
           result: ['x', 'x', 'x'],
           error: null,
@@ -34,14 +34,14 @@ describe('manyOrNone(singleParser)', () => {
     });
 
     describe('when parsing a target string that cannot be matched at least once by "singleParser" ', () => {
-      it('should return the proper parser state', () => {
+      it('should return the correct parser state', () => {
         const manyOrNoneX = manyOrNone(chr('x'));
-        const initialState = buildParserState({ targetString: 'yyz' });
+        const initialState = buildParserState({ remainingInput: 'yyz' });
 
         const newParserState = manyOrNoneX.parseFunction(initialState);
 
         expect(newParserState).toEqual({
-          targetString: 'yyz',
+          remainingInput: 'yyz',
           index: 0,
           result: [],
           error: null,
@@ -53,7 +53,7 @@ describe('manyOrNone(singleParser)', () => {
       it('should do nothing but return it', () => {
         const manyOrNoneX = manyOrNone(chr('x'));
         const error = new ParserError('ParserError', 'Ooops!', '', {});
-        const initialState = buildParserState({ targetString: 'xxxy', error });
+        const initialState = buildParserState({ remainingInput: 'xxxy', error });
 
         const newParserState = manyOrNoneX.parseFunction(initialState);
 

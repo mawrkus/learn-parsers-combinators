@@ -8,7 +8,7 @@ module.exports = (expectedChar) => {
 
   const chrParser = new Parser((parserState) => {
     const {
-      targetString,
+      remainingInput,
       index,
       error,
     } = parserState;
@@ -17,7 +17,7 @@ module.exports = (expectedChar) => {
       return parserState;
     }
 
-    if (expectedChar !== targetString[0]) {
+    if (expectedChar !== remainingInput[0]) {
       return {
         ...parserState,
         error: ParserError.create('ChrParserError', expectedChar, parserState),
@@ -26,7 +26,7 @@ module.exports = (expectedChar) => {
 
     return {
       ...parserState,
-      targetString: targetString.slice(1),
+      remainingInput: remainingInput.slice(1),
       index: index + 1,
       result: expectedChar,
       error: null,

@@ -10,7 +10,7 @@ module.exports = (expectedString) => {
 
   const strParser = new Parser((parserState) => {
     const {
-      targetString,
+      remainingInput,
       index,
       error,
     } = parserState;
@@ -19,7 +19,7 @@ module.exports = (expectedString) => {
       return parserState;
     }
 
-    if (!targetString.length || !targetString.startsWith(expectedString)) {
+    if (!remainingInput.length || !remainingInput.startsWith(expectedString)) {
       return {
         ...parserState,
         error: ParserError.create('StringParserError', expectedString, parserState),
@@ -28,7 +28,7 @@ module.exports = (expectedString) => {
 
     return {
       ...parserState,
-      targetString: targetString.slice(expectedStringLength),
+      remainingInput: remainingInput.slice(expectedStringLength),
       index: index + expectedStringLength,
       result: expectedString,
       error: null,

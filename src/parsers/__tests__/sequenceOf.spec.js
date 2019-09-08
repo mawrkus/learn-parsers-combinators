@@ -18,14 +18,14 @@ describe('sequenceOf(parsers)', () => {
 
   describe('the parser returned', () => {
     describe('when parsing a target string that can be matched by the sequence of parsers', () => {
-      it('should return the proper parser state', () => {
+      it('should return the correct parser state', () => {
         const xyz = sequenceOf([chr('x'), chr('y'), chr('z')]);
-        const initialState = buildParserState({ targetString: 'xyz' });
+        const initialState = buildParserState({ remainingInput: 'xyz' });
 
         const newParserState = xyz.parseFunction(initialState);
 
         expect(newParserState).toEqual({
-          targetString: '',
+          remainingInput: '',
           index: 3,
           result: ['x', 'y', 'z'],
           error: null,
@@ -34,14 +34,14 @@ describe('sequenceOf(parsers)', () => {
     });
 
     describe('when parsing a target string that cannot be matched by the sequence of parsers', () => {
-      it('should return a parser error state', () => {
+      it('should return an error state', () => {
         const xyz = sequenceOf([chr('x'), chr('o'), chr('z')]);
-        const initialState = buildParserState({ targetString: 'xyz' });
+        const initialState = buildParserState({ remainingInput: 'xyz' });
 
         const newParserState = xyz.parseFunction(initialState);
 
         expect(newParserState).toEqual({
-          targetString: 'yz',
+          remainingInput: 'yz',
           index: 1,
           result: ['x'],
           error: expect.any(ParserError),
@@ -53,7 +53,7 @@ describe('sequenceOf(parsers)', () => {
       it('should do nothing but return it', () => {
         const xyz = sequenceOf([chr('x'), chr('y'), chr('z')]);
         const error = new ParserError('ParserError', 'Ooops!', '', {});
-        const initialState = buildParserState({ targetString: 'xyz', error });
+        const initialState = buildParserState({ remainingInput: 'xyz', error });
 
         const newParserState = xyz.parseFunction(initialState);
 

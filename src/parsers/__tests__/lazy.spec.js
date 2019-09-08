@@ -26,8 +26,8 @@ describe('lazy(parserThunk)', () => {
         expect(parserThunk).toHaveBeenCalled();
 
         expect(parser.parseFunction).toHaveBeenCalledWith({
-          originalString: '42',
-          targetString: '42',
+          input: '42',
+          remainingInput: '42',
           index: 0,
           result: null,
           error: null,

@@ -11,36 +11,36 @@ describe('eoi()', () => {
 
   describe('the parser returned', () => {
     it('should expose an "end of input" (EOI) symbol', () => {
-      const endOfInput = eoi();
+      const endOfremainingInput = eoi();
 
-      expect(typeof endOfInput.eoiSymbol).toBe('symbol');
+      expect(typeof endOfremainingInput.eoiSymbol).toBe('symbol');
     });
 
     describe('when parsing an empty target string', () => {
-      it('should return the proper parser state', () => {
-        const endOfInput = eoi();
-        const initialState = buildParserState({ targetString: '' });
+      it('should return the correct parser state', () => {
+        const endOfremainingInput = eoi();
+        const initialState = buildParserState({ remainingInput: '' });
 
-        const newParserState = endOfInput.parseFunction(initialState);
+        const newParserState = endOfremainingInput.parseFunction(initialState);
 
         expect(newParserState).toEqual({
-          targetString: '',
+          remainingInput: '',
           index: 0,
-          result: endOfInput.eoiSymbol,
+          result: endOfremainingInput.eoiSymbol,
           error: null,
         });
       });
     });
 
     describe('when parsing a non-empty target string', () => {
-      it('should return a parser error state', () => {
-        const endOfInput = eoi();
-        const initialState = buildParserState({ targetString: 'life is long' });
+      it('should return an error state', () => {
+        const endOfremainingInput = eoi();
+        const initialState = buildParserState({ remainingInput: 'life is long' });
 
-        const newParserState = endOfInput.parseFunction(initialState);
+        const newParserState = endOfremainingInput.parseFunction(initialState);
 
         expect(newParserState).toEqual({
-          targetString: 'life is long',
+          remainingInput: 'life is long',
           index: 0,
           result: null,
           error: expect.any(ParserError),
@@ -50,11 +50,11 @@ describe('eoi()', () => {
 
     describe('when called on a parser error state', () => {
       it('should do nothing but return it', () => {
-        const endOfInput = eoi();
+        const endOfremainingInput = eoi();
         const error = new ParserError('ParserError', 'Ooops!', '', {});
-        const initialState = buildParserState({ targetString: 'life is short', error });
+        const initialState = buildParserState({ remainingInput: 'life is short', error });
 
-        const newParserState = endOfInput.parseFunction(initialState);
+        const newParserState = endOfremainingInput.parseFunction(initialState);
 
         expect(newParserState).toEqual(initialState);
       });

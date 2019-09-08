@@ -1,5 +1,5 @@
 module.exports = (state) => ({
-  targetString: '',
+  remainingInput: '',
   index: 0,
   result: null,
   error: null,

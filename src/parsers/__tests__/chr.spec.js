@@ -29,14 +29,14 @@ describe('chr(expectedChar)', () => {
 
   describe('the parser returned', () => {
     describe('when parsing an empty target string', () => {
-      it('should return a parser error state', () => {
+      it('should return an error state', () => {
         const x = chr('x');
-        const initialState = buildParserState({ targetString: '' });
+        const initialState = buildParserState({ remainingInput: '' });
 
         const newParserState = x.parseFunction(initialState);
 
         expect(newParserState).toEqual({
-          targetString: '',
+          remainingInput: '',
           index: 0,
           result: null,
           error: expect.any(ParserError),
@@ -45,14 +45,14 @@ describe('chr(expectedChar)', () => {
     });
 
     describe('when parsing a target string whose first char is "expectedChar"', () => {
-      it('should return the proper parser state', () => {
+      it('should return the correct parser state', () => {
         const x = chr('x');
-        const initialState = buildParserState({ targetString: 'xxx' });
+        const initialState = buildParserState({ remainingInput: 'xxx' });
 
         const newParserState = x.parseFunction(initialState);
 
         expect(newParserState).toEqual({
-          targetString: 'xx',
+          remainingInput: 'xx',
           index: 1,
           result: 'x',
           error: null,
@@ -61,14 +61,14 @@ describe('chr(expectedChar)', () => {
     });
 
     describe('when parsing a target string whost first char is not "expectedChar"', () => {
-      it('should return a parser error state', () => {
+      it('should return an error state', () => {
         const x = chr('x');
-        const initialState = buildParserState({ targetString: 'yxx' });
+        const initialState = buildParserState({ remainingInput: 'yxx' });
 
         const newParserState = x.parseFunction(initialState);
 
         expect(newParserState).toEqual({
-          targetString: 'yxx',
+          remainingInput: 'yxx',
           index: 0,
           result: null,
           error: expect.any(ParserError),
@@ -80,7 +80,7 @@ describe('chr(expectedChar)', () => {
       it('should do nothing but return it', () => {
         const x = chr('x');
         const error = new ParserError('ParserError', 'Ooops!', '', {});
-        const initialState = buildParserState({ targetString: 'xxx', error });
+        const initialState = buildParserState({ remainingInput: 'xxx', error });
 
         const newParserState = x.parseFunction(initialState);
 

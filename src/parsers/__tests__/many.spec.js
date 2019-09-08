@@ -18,14 +18,14 @@ describe('many(singleParser)', () => {
 
   describe('the parser returned', () => {
     describe('when parsing a target string that can be matched at least once by "singleParser" ', () => {
-      it('should return the proper parser state', () => {
+      it('should return the correct parser state', () => {
         const manyX = many(chr('x'));
-        const initialState = buildParserState({ targetString: 'xxxy' });
+        const initialState = buildParserState({ remainingInput: 'xxxy' });
 
         const newParserState = manyX.parseFunction(initialState);
 
         expect(newParserState).toEqual({
-          targetString: 'y',
+          remainingInput: 'y',
           index: 3,
           result: ['x', 'x', 'x'],
           error: null,
@@ -34,14 +34,14 @@ describe('many(singleParser)', () => {
     });
 
     describe('when parsing a target string that cannot be matched at least once by "singleParser" ', () => {
-      it('should return a parser error state', () => {
+      it('should return an error state', () => {
         const manyX = many(chr('x'));
-        const initialState = buildParserState({ targetString: 'yyz' });
+        const initialState = buildParserState({ remainingInput: 'yyz' });
 
         const newParserState = manyX.parseFunction(initialState);
 
         expect(newParserState).toEqual({
-          targetString: 'yyz',
+          remainingInput: 'yyz',
           index: 0,
           result: null,
           error: expect.any(ParserError),
@@ -53,7 +53,7 @@ describe('many(singleParser)', () => {
       it('should do nothing but return it', () => {
         const manyX = many(chr('x'));
         const error = new ParserError('ParserError', 'Ooops!', '', {});
-        const initialState = buildParserState({ targetString: 'xxxy', error });
+        const initialState = buildParserState({ remainingInput: 'xxxy', error });
 
         const newParserState = manyX.parseFunction(initialState);
 

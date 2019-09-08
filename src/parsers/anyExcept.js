@@ -17,19 +17,19 @@ module.exports = (exceptParser) => {
     while (true) {
       const {
         error,
-        targetString,
+        remainingInput,
         index,
       } = exceptParser.parseFunction(currentState);
 
-      if (!error || !targetString.length) {
+      if (!error || !remainingInput.length) {
         return currentState;
       }
 
-      result = `${result}${targetString[0]}`;
+      result = `${result}${remainingInput[0]}`;
 
       currentState = {
         ...currentState,
-        targetString: targetString.slice(1),
+        remainingInput: remainingInput.slice(1),
         index: index + 1,
         result,
       };

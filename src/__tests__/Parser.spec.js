@@ -18,7 +18,7 @@ describe('Parser', () => {
     expect(Parser.prototype.map).toBeInstanceOf(Function);
   });
 
-  describe('run(originalString)', () => {
+  describe('run(input)', () => {
     it('should call the parse function on the proper initial state and return the result of its call', () => {
       const {
         parseFunction,
@@ -33,8 +33,8 @@ describe('Parser', () => {
       const parsed = parser.run('1 2 1 2... this is just a test');
 
       expect(parseFunction).toHaveBeenCalledWith({
-        originalString: '1 2 1 2... this is just a test',
-        targetString: '1 2 1 2... this is just a test',
+        input: '1 2 1 2... this is just a test',
+        remainingInput: '1 2 1 2... this is just a test',
         index: 0,
         result: null,
         error: null,

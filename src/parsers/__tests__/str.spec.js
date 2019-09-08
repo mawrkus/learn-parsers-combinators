@@ -23,14 +23,14 @@ describe('str(expectedString)', () => {
 
   describe('the parser returned', () => {
     describe('when parsing an empty target string', () => {
-      it('should return a parser error state', () => {
+      it('should return an error state', () => {
         const rosebud = str('rosebud');
-        const initialState = buildParserState({ targetString: '' });
+        const initialState = buildParserState({ remainingInput: '' });
 
         const newParserState = rosebud.parseFunction(initialState);
 
         expect(newParserState).toEqual({
-          targetString: '',
+          remainingInput: '',
           index: 0,
           result: null,
           error: expect.any(ParserError),
@@ -39,14 +39,14 @@ describe('str(expectedString)', () => {
     });
 
     describe('when parsing a target string that does not start with "expectedString"', () => {
-      it('should return a parser error state', () => {
+      it('should return an error state', () => {
         const rosebud = str('rosebud');
-        const initialState = buildParserState({ targetString: 'its name was rosebud' });
+        const initialState = buildParserState({ remainingInput: 'its name was rosebud' });
 
         const newParserState = rosebud.parseFunction(initialState);
 
         expect(newParserState).toEqual({
-          targetString: 'its name was rosebud',
+          remainingInput: 'its name was rosebud',
           index: 0,
           result: null,
           error: expect.any(ParserError),
@@ -55,14 +55,14 @@ describe('str(expectedString)', () => {
     });
 
     describe('when parsing a target string that starts with "expectedString"', () => {
-      it('should return the proper parser state', () => {
+      it('should return the correct parser state', () => {
         const rosebud = str('rosebud');
-        const initialState = buildParserState({ targetString: 'rosebud was its name' });
+        const initialState = buildParserState({ remainingInput: 'rosebud was its name' });
 
         const newParserState = rosebud.parseFunction(initialState);
 
         expect(newParserState).toEqual({
-          targetString: ' was its name',
+          remainingInput: ' was its name',
           index: 7,
           result: 'rosebud',
           error: null,
@@ -74,7 +74,7 @@ describe('str(expectedString)', () => {
       it('should do nothing but return it', () => {
         const rosebud = str('rosebud');
         const error = new ParserError('ParserError', 'Ooops!', '', {});
-        const initialState = buildParserState({ targetString: 'xxx', error });
+        const initialState = buildParserState({ remainingInput: 'xxx', error });
 
         const newParserState = rosebud.parseFunction(initialState);
 

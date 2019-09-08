@@ -18,14 +18,14 @@ describe('anyExcept(exceptParser)', () => {
 
   describe('the parser returned', () => {
     describe('when parsing a target string that can be matched at least once by "exceptParser"', () => {
-      it('should return the proper parser state', () => {
+      it('should return the correct parser state', () => {
         const anyExceptX = anyExcept(chr('x'));
-        const initialState = buildParserState({ targetString: 'aaax' });
+        const initialState = buildParserState({ remainingInput: 'aaax' });
 
         const newParserState = anyExceptX.parseFunction(initialState);
 
         expect(newParserState).toEqual({
-          targetString: 'x',
+          remainingInput: 'x',
           index: 3,
           result: 'aaa',
           error: null,
@@ -34,14 +34,14 @@ describe('anyExcept(exceptParser)', () => {
     });
 
     describe('when parsing a target string that cannot be matched at least once by "exceptParser"', () => {
-      it('should return the proper parser state', () => {
+      it('should return the correct parser state', () => {
         const anyExceptX = anyExcept(chr('x'));
-        const initialState = buildParserState({ targetString: 'yyz' });
+        const initialState = buildParserState({ remainingInput: 'yyz' });
 
         const newParserState = anyExceptX.parseFunction(initialState);
 
         expect(newParserState).toEqual({
-          targetString: '',
+          remainingInput: '',
           index: 3,
           result: 'yyz',
           error: null,
@@ -53,7 +53,7 @@ describe('anyExcept(exceptParser)', () => {
       it('should do nothing but return it', () => {
         const anyExceptX = anyExcept(chr('x'));
         const error = new ParserError('ParserError', 'Ooops!', '', {});
-        const initialState = buildParserState({ targetString: 'xxxy', error });
+        const initialState = buildParserState({ remainingInput: 'xxxy', error });
 
         const newParserState = anyExceptX.parseFunction(initialState);
 

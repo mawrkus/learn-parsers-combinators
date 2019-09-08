@@ -9,8 +9,8 @@ module.exports = class ParserError extends Error {
     super(msg);
 
     const {
-      originalString: input,
-      targetString: actual,
+      input,
+      remainingInput: actual,
       index,
     } = parserState;
 
@@ -24,12 +24,12 @@ module.exports = class ParserError extends Error {
 
   static create(type, expected, parserState) {
     const {
-      originalString,
+      input,
       index,
     } = parserState;
 
     const expectedMsg = `Expected: ${convertToHumanFriendly(expected.toString())}`;
-    const originalHumanFriendly = convertToHumanFriendly(originalString || '');
+    const originalHumanFriendly = convertToHumanFriendly(input || '');
     const actualMsg = `Actual: ${originalHumanFriendly}`;
 
     const offset = 9 + (originalHumanFriendly.match(/(\\\n|\\t)/g) || []).length;

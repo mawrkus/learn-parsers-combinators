@@ -19,42 +19,42 @@ describe('regex(regex, capture = false)', () => {
   describe('the parser returned', () => {
     describe('if "capture" is false', () => {
       describe('when parsing a target string that "regex" matches', () => {
-        it('should return the proper parser state (/\\w+/)', () => {
+        it('should return the correct parser state (/\\w+/)', () => {
           const identifier = regex(/\w+/);
-          const initialState = buildParserState({ targetString: '*** Kode9 (=)' });
+          const initialState = buildParserState({ remainingInput: '*** Kode9 (=)' });
 
           const newParserState = identifier.parseFunction(initialState);
 
           expect(newParserState).toEqual({
-            targetString: ' (=)',
+            remainingInput: ' (=)',
             index: 9,
             result: 'Kode9',
             error: null,
           });
         });
 
-        it('should return the proper parser state (/[a-z]+$/)', () => {
+        it('should return the correct parser state (/[a-z]+$/)', () => {
           const letters = regex(/[a-z]+$/);
-          const initialState = buildParserState({ targetString: '1 2 1 2... the earth is flat' });
+          const initialState = buildParserState({ remainingInput: '1 2 1 2... the earth is flat' });
 
           const newParserState = letters.parseFunction(initialState);
 
           expect(newParserState).toEqual({
-            targetString: '',
+            remainingInput: '',
             index: 28,
             result: 'flat',
             error: null,
           });
         });
 
-        it('should return the proper parser state (/^[a-z]+/)', () => {
+        it('should return the correct parser state (/^[a-z]+/)', () => {
           const letters = regex(/^[a-z]+/);
-          const initialState = buildParserState({ targetString: 'welcome to the world' });
+          const initialState = buildParserState({ remainingInput: 'welcome to the world' });
 
           const newParserState = letters.parseFunction(initialState);
 
           expect(newParserState).toEqual({
-            targetString: ' to the world',
+            remainingInput: ' to the world',
             index: 7,
             result: 'welcome',
             error: null,
@@ -63,14 +63,14 @@ describe('regex(regex, capture = false)', () => {
       });
 
       describe('when parsing an empty target string', () => {
-        it('should return a parser error state', () => {
+        it('should return an error state', () => {
           const digits = regex(/[0-9]*/);
-          const initialState = buildParserState({ targetString: '' });
+          const initialState = buildParserState({ remainingInput: '' });
 
           const newParserState = digits.parseFunction(initialState);
 
           expect(newParserState).toEqual({
-            targetString: '',
+            remainingInput: '',
             index: 0,
             result: null,
             error: expect.any(ParserError),
@@ -80,14 +80,14 @@ describe('regex(regex, capture = false)', () => {
     });
 
     describe('if "capture" is true', () => {
-      it('should return the proper parser state, using the first captured group', () => {
+      it('should return the correct parser state, using the first captured group', () => {
         const identifier = regex(/.+(\dpm)/, true);
-        const initialState = buildParserState({ targetString: 'Kode9 live at 9pm at Apolo' });
+        const initialState = buildParserState({ remainingInput: 'Kode9 live at 9pm at Apolo' });
 
         const newParserState = identifier.parseFunction(initialState);
 
         expect(newParserState).toEqual({
-          targetString: ' at Apolo',
+          remainingInput: ' at Apolo',
           index: 17,
           result: '9pm',
           error: null,
@@ -95,14 +95,14 @@ describe('regex(regex, capture = false)', () => {
       });
 
       describe('when parsing an empty target string', () => {
-        it('should return the proper parser state (/[0-9]*/)', () => {
+        it('should return the correct parser state (/[0-9]*/)', () => {
           const digits = regex(/([0-9]*)/, true);
-          const initialState = buildParserState({ targetString: '' });
+          const initialState = buildParserState({ remainingInput: '' });
 
           const newParserState = digits.parseFunction(initialState);
 
           expect(newParserState).toEqual({
-            targetString: '',
+            remainingInput: '',
             index: 0,
             result: null,
             error: expect.any(ParserError),
@@ -112,14 +112,14 @@ describe('regex(regex, capture = false)', () => {
     });
 
     describe('when parsing a target string that "regex" does not match', () => {
-      it('should return a parser error state', () => {
+      it('should return an error state', () => {
         const digits = regex(/$[0-9]+/);
-        const initialState = buildParserState({ targetString: 'Kode9 (=)' });
+        const initialState = buildParserState({ remainingInput: 'Kode9 (=)' });
 
         const newParserState = digits.parseFunction(initialState);
 
         expect(newParserState).toEqual({
-          targetString: 'Kode9 (=)',
+          remainingInput: 'Kode9 (=)',
           index: 0,
           result: null,
           error: expect.any(ParserError),
@@ -131,7 +131,7 @@ describe('regex(regex, capture = false)', () => {
       it('should do nothing but return it', () => {
         const identifier = regex(/\w+/);
         const error = new ParserError('ParserError', 'Ooops!', '', {});
-        const initialState = buildParserState({ targetString: 'Kode9 (=)', error });
+        const initialState = buildParserState({ remainingInput: 'Kode9 (=)', error });
 
         const newParserState = identifier.parseFunction(initialState);
 

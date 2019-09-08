@@ -1,7 +1,6 @@
 const Parser = require('../Parser');
 const ParserError = require('../ParserError');
 
-
 module.exports = (sepParser) => {
   if (!(sepParser instanceof Parser)) {
     throw new TypeError('Please provide an instance of the "Parser" class!');
@@ -25,6 +24,10 @@ module.exports = (sepParser) => {
         currentState = valueParser.parseFunction(currentState);
 
         if (currentState.error) {
+          if (!results.length) {
+            break;
+          }
+
           return {
             ...currentState,
             result: null,

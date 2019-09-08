@@ -15,10 +15,10 @@ module.exports = class Parser {
     this.type = type;
   }
 
-  run(originalString) {
+  run(input) {
     const initialState = {
-      originalString,
-      targetString: originalString,
+      input,
+      remainingInput: input,
       index: 0,
       result: null,
       error: null,

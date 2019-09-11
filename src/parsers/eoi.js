@@ -6,7 +6,8 @@ module.exports = () => {
 
   const eoiParser = new Parser((parserState) => {
     const {
-      remainingInput,
+      input,
+      index,
       error,
     } = parserState;
 
@@ -14,7 +15,7 @@ module.exports = () => {
       return parserState;
     }
 
-    if (remainingInput.length > 0) {
+    if (index !== input.length) {
       return {
         ...parserState,
         error: ParserError.create('EndOfInputParserError', '', parserState),
@@ -25,7 +26,7 @@ module.exports = () => {
       ...parserState,
       result: eoiSymbol,
     };
-  }, 'EndOfInputParserError()');
+  }, 'EndOfInput');
 
   eoiParser.eoiSymbol = eoiSymbol;
 

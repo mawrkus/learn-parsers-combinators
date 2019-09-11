@@ -17,7 +17,23 @@ describe('many(singleParser)', () => {
   });
 
   describe('the parser returned', () => {
-    describe('when parsing a target string that can be matched at least once by "singleParser" ', () => {
+    describe('when parsing a target string that can be matched only once by "singleParser" ', () => {
+      it('should return the correct parser state', () => {
+        const manyX = many(chr('x'));
+        const initialState = buildParserState({ remainingInput: 'x' });
+
+        const newParserState = manyX.parseFunction(initialState);
+
+        expect(newParserState).toEqual({
+          remainingInput: '',
+          index: 1,
+          result: ['x'],
+          error: null,
+        });
+      });
+    });
+
+    describe('when parsing a target string that can be matched more than once by "singleParser" ', () => {
       it('should return the correct parser state', () => {
         const manyX = many(chr('x'));
         const initialState = buildParserState({ remainingInput: 'xxxy' });

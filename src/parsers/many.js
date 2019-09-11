@@ -19,6 +19,7 @@ module.exports = (singleParser) => {
       const nextState = singleParser.parseFunction(currentState);
 
       const {
+        remainingInput,
         result,
         error,
       } = nextState;
@@ -37,18 +38,23 @@ module.exports = (singleParser) => {
           };
         }
 
-        // done parsing
-        return {
-          ...currentState,
-          result: results,
-          error: null,
-        };
+        break;
       }
 
       results.push(result);
 
       currentState = nextState;
+
+      if (!remainingInput.length) {
+        break;
+      }
     }
+
+    return {
+      ...currentState,
+      result: results,
+      error: null,
+    };
   }, `Many(${singleParser.type})`);
 
   return manyParser;

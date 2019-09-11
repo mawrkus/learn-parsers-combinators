@@ -17,7 +17,7 @@ module.exports = () => {
     if (remainingInput.length > 0) {
       return {
         ...parserState,
-        error: ParserError.create('EndOfremainingInputParserError', '', parserState),
+        error: ParserError.create('EndOfInputParserError', '', parserState),
       };
     }
 
@@ -25,7 +25,7 @@ module.exports = () => {
       ...parserState,
       result: eoiSymbol,
     };
-  }, 'EndOfremainingInputParserError()');
+  }, 'EndOfInputParserError()');
 
   eoiParser.eoiSymbol = eoiSymbol;
 

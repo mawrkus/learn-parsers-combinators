@@ -34,18 +34,14 @@ class CsvParser extends Parser {
     const betweenQuotesParser = between(quoteParser, quoteParser);
     const delimiterParser = chr(delimiter);
     const eolParser = str(eol);
-    const eoiParser = eoi();
 
     const fieldParser = quote === false
-      ? regex(new RegExp(`[^${delimiter}${eol}]+`))
-      : betweenQuotesParser(regex(new RegExp(`[^${quote}]+`)));
+      ? regex(new RegExp(`^[^${delimiter}${eol}]+`))
+      : betweenQuotesParser(regex(new RegExp(`^[^${quote}]+`)));
 
     const lineParser = sequenceOf([
       sepBy(delimiterParser)(fieldParser),
-      anyOf([
-        eolParser,
-        eoiParser,
-      ]),
+      eolParser,
     ])
       .map(([fields]) => fields);
 
@@ -90,15 +86,13 @@ const parser = new CsvParser({
   eol: '\n',
   headers: true,
 });
-const parsed = parser.run(`
-who,ok?,when?
+const parsed = parser.run(`who,ok?,when?
 tina,yes,now
 cata,yes,later
 nana,no,now
 marc,yes,later
 carlos,yes,later
-bogdan,no,now
-`);
+bogdan,no,now`);
 
 if (parsed.error) {
   console.error(parsed.error);

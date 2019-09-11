@@ -29,10 +29,10 @@ module.exports = class ParserError extends Error {
     } = parserState;
 
     const expectedMsg = `Expected: ${convertToHumanFriendly(expected.toString())}`;
-    const originalHumanFriendly = convertToHumanFriendly(input || '');
-    const actualMsg = `Actual: ${originalHumanFriendly}`;
+    const humanFriendlyInput = convertToHumanFriendly(input || '');
+    const actualMsg = `Actual: ${humanFriendlyInput}`;
 
-    const offset = 9 + (originalHumanFriendly.match(/(\\\n|\\t)/g) || []).length;
+    const offset = 9 + (humanFriendlyInput.match(/(\\\n|\\t)/g) || []).length;
     const indexMsg = `${Array(index + offset).join(' ')}^ at index ${index}!`;
 
     const msg = `\n${expectedMsg}\n${actualMsg}\n${indexMsg}`;

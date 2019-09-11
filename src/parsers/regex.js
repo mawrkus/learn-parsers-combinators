@@ -1,14 +1,19 @@
 const Parser = require('../Parser');
 const ParserError = require('../ParserError');
 
-module.exports = (regex, capture = false) => {
-  if (!(regex instanceof RegExp)) {
+module.exports = (re) => {
+  if (!(re instanceof RegExp)) {
     throw new TypeError('Please provide a regular expression!');
+  }
+
+  if (re.toString()[1] !== '^') {
+    throw new TypeError('The regular expression should start with the "^" metacharacter!');
   }
 
   const regexParser = new Parser((parserState) => {
     const {
       remainingInput,
+      index,
       error,
     } = parserState;
 
@@ -19,33 +24,28 @@ module.exports = (regex, capture = false) => {
     if (!remainingInput.length) {
       return {
         ...parserState,
-        error: ParserError.create('RegexParserError', regex, parserState),
+        error: ParserError.create('RegexParserError', re, parserState),
       };
     }
 
-    const matches = remainingInput.match(regex);
-    const matchedString = capture ? matches && matches[1] : matches && matches[0];
+    const matches = remainingInput.match(re);
+    const matchedString = matches && matches[0];
 
-    if (!matches || typeof matchedString === 'undefined') {
+    if (!matchedString) {
       return {
         ...parserState,
-        error: ParserError.create('RegexParserError', regex, parserState),
+        error: ParserError.create('RegexParserError', re, parserState),
       };
     }
-
-    // TODO: err if newIndex = 0
-    const newIndex = capture
-      ? matches[0].length
-      : matches.index + matchedString.length;
 
     return {
       ...parserState,
-      remainingInput: remainingInput.slice(newIndex),
-      index: newIndex,
+      remainingInput: remainingInput.slice(matchedString.length),
+      index: index + matchedString.length,
       result: matchedString,
       error: null,
     };
-  }, `RegEx("${regex.toString()}", ${capture.toString()})`);
+  }, `RegEx("${re.toString()}")`);
 
   return regexParser;
 };

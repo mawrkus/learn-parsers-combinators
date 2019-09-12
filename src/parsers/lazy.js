@@ -8,7 +8,7 @@ module.exports = (parserThunk) => {
   const lazyParser = new Parser((parserState) => {
     const parser = parserThunk();
     return parser.parseFunction(parserState);
-  }, `Lazy(${JSON.stringify(parserThunk)})`);
+  }, 'Lazy');
 
   return lazyParser;
 };

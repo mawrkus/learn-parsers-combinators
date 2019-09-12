@@ -53,8 +53,8 @@ class ExpressionParser extends Parser {
     super(expressionParser.parseFunction, 'ExpressionParser');
   }
 
-  run(targetString) {
-    return super.run(targetString);
+  run(input) {
+    return super.run(input);
   }
 }
 

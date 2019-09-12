@@ -76,8 +76,8 @@ class CsvParser extends Parser {
     super(csvParser.parseFunction, 'CSVParser');
   }
 
-  run(targetString) {
-    return super.run(targetString);
+  run(input) {
+    return super.run(input);
   }
 }
 

@@ -31,7 +31,8 @@ module.exports = (re) => {
     const matches = remainingInput.match(re);
     const matchedString = matches && matches[0];
 
-    if (typeof matchedString === 'undefined') {
+    // TODO: UT null AND undefined cases
+    if (matchedString === null || typeof matchedString === 'undefined') {
       return {
         ...parserState,
         error: ParserError.create('RegexParserError', re, parserState),

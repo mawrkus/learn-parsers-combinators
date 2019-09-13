@@ -35,7 +35,14 @@ class JsonParser extends Parser {
     const number = regex(/^-?\d+(\.\d+)?/).map((n) => Number(n));
 
     const string = betweenQuotes(
-      regex(/^[^"]*/), // TODO: fixme
+      manyOrNone(
+        anyOf([
+          str('\\"'),
+          // TODO: fixme
+          // anyExcept(chr('"')),
+          regex(/^[^\\"]+/),
+        ]),
+      ).map(r => r.join('')),
     );
 
     const value = lazy(() => betweenOptionalWhitespaces(
@@ -73,7 +80,7 @@ class JsonParser extends Parser {
       object,
     ]);
 
-    super(array.parseFunction, 'JsonParser');
+    super(json.parseFunction, 'JsonParser');
   }
 
   run(input) {
@@ -118,7 +125,7 @@ function logOutput(parsed) {
   // '[ "one", 2, -3.14, true, false, null, [], {} ]',
   // '[ ["one"], [2, -3.14], [true, [false], [[null, [], {}]]] ]',
   // '[1,"2",-3.1415926, true, [false, "test", null, "890"] ,  [{"test":null}]  ,{}, {    }  , {     } ]',
-  '["\n\t->\t\"maybe\" <-\r\n"]'
+  '["\n\t->\t\\"maybe\\"  <-\r\n"]',
 ].forEach((input) => {
   const parser = new JsonParser();
   logOutput(parser.run(input));

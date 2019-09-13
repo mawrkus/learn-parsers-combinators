@@ -25,46 +25,55 @@ const between = (leftParser, rightParser) => (contentParser) => sequenceOf([
 
 class JsonParser extends Parser {
   constructor() {
-    const sepByComma = sepBy(chr(','));
-    const whitespace = regex(/^\s+/);
-    const betweenQuotes = between(chr('"'), chr('"'));
-    const string = betweenQuotes(regex(/^[^"]*/));
-    const number = regex(/^-?\d+(\.\d+)?/).map((n) => Number(n));
-    const betweenWhitespaces = between(whitespace, whitespace);
-    const value = lazy(() => betweenWhitespaces(anyOf([
-      string,
-      number,
-      object, // eslint-disable-line
-      array, // eslint-disable-line
-      str('true').map(() => true),
-      str('false').map(() => false),
-      str('null').map(() => null),
-    ])));
     const betweenBrackets = between(chr('['), chr(']'));
-    const array = betweenBrackets(anyOf([
-      whitespace,
-      sepByComma(value),
-    ]));
     const betweenBraces = between(chr('{'), chr('}'));
-    const object = betweenBraces(anyOf([
-      whitespace,
-      sepByComma(sequenceOf([
-        whitespace,
-        string,
-        whitespace,
-        chr(':'),
-        value,
-      ])),
-    ])).map(([, nameValuePairs]) => {
-      return nameValuePairs;
-    });
+    const optionalWhitespaces = manyOrNone(regex(/^[ \n\r\t]+/));
+    const betweenOptionalWhitespaces = between(optionalWhitespaces, optionalWhitespaces);
+    const betweenQuotes = between(chr('"'), chr('"'));
+    const sepByComma = sepBy(chr(','));
 
-    const jsonParser = anyOf([
+    const number = regex(/^-?\d+(\.\d+)?/).map((n) => Number(n));
+
+    const string = betweenQuotes(
+      regex(/^[^"]*/), // TODO: fixme
+    );
+
+    const value = lazy(() => betweenOptionalWhitespaces(
+      anyOf([
+        str('true').map(() => true),
+        str('false').map(() => false),
+        str('null').map(() => null),
+        number,
+        string,
+        array, // eslint-disable-line
+        object, // eslint-disable-line
+      ])),
+    );
+
+    const array = betweenOptionalWhitespaces(
+      betweenBrackets(
+        sepByComma(value),
+      ),
+    );
+
+    const object = betweenOptionalWhitespaces(
+      betweenBraces(
+        sepByComma(
+          sequenceOf([
+            betweenOptionalWhitespaces(string),
+            chr(':'),
+            value,
+          ]),
+        ).map(pairs => pairs.reduce((acc, [name, colon, value]) => ({ ...acc, [name]: value }), {})),
+      ),
+    );
+
+    const json = anyOf([
       array,
       object,
     ]);
 
-    super(jsonParser.parseFunction, 'ExpressionParser');
+    super(array.parseFunction, 'JsonParser');
   }
 
   run(input) {
@@ -72,27 +81,45 @@ class JsonParser extends Parser {
   }
 }
 
-function logOutput(input, parsed) {
-  console.log('__________________________________________________________________________________');
+function logOutput(parsed) {
   if (parsed.error) {
-    console.log('%s ->', input, parsed.error);
+    console.log('%s ->', parsed.input, parsed.error);
   } else {
-    console.log('%s ->', input, JSON.stringify(parsed, null, 1));
+    console.log('%s ->', parsed.input, JSON.stringify(parsed, null, 1));
   }
+  console.log('__________________________________________________________________________________');
 }
 
 [
-  '[ null ]'
   // '{}',
-  // '{ "one": "one", "two": 2, "three": {}, "four": [], "five": true, "six": false, "seven": null }',
+  // ' {} ',
+  // '{   }',
+  // '{ "one" : "" }',
+  // '{"one":1}',
+  // '{ "one" : 1 }',
+  /* `
+  {
+    "one":1,
+    "two": "2",
+    "three" :true,
+    "four" : false,
+    "five"   :   null
+  }
+  `, */
+  // '{ "one": { "two": 3 } }',
+  // '{ "one": { "two": 3 }, "four": 5, "six": {}, "seven": [] }',
+  // '{ "items": [{ "id": "1", "tags":["sci-fi", "utopia"] }], "pagination": { "page": 1, "totalPages": 42 } }',
+  // '[]',
+  // ' [] ',
+  // '[   ]',
+  // '["one"]',
+  // '[""]',
+  // '[ "one" ]',
+  // '[ "one", 2, -3.14, true, false, null, [], {} ]',
+  // '[ ["one"], [2, -3.14], [true, [false], [[null, [], {}]]] ]',
+  // '[1,"2",-3.1415926, true, [false, "test", null, "890"] ,  [{"test":null}]  ,{}, {    }  , {     } ]',
+  '["\n\t->\t\"maybe\" <-\r\n"]'
 ].forEach((input) => {
   const parser = new JsonParser();
-  logOutput(input, parser.run(input));
+  logOutput(parser.run(input));
 });
-
-/* [
-  '[]',
-].forEach((input) => {
-  const parser = new JsonParser();
-  logOutput(input, parser.run(input));
-}); */

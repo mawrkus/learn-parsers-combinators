@@ -1,6 +1,7 @@
 function convertToHumanFriendly(str) {
   return str
-    .replace(/\r?\n/g, '\\n')
+    .replace(/\r/g, '\\r')
+    .replace(/\n/g, '\\n')
     .replace(/\t/g, '\\t');
 }
 
@@ -24,17 +25,18 @@ module.exports = class ParserError extends Error {
 
   static create(type, expected, parserState) {
     const {
-      input,
+      input = '',
       index,
     } = parserState;
 
     const expectedMsg = `Expected: ${convertToHumanFriendly(expected.toString())}`;
-    const humanFriendlyInput = convertToHumanFriendly(input || '');
+    const humanFriendlyInput = convertToHumanFriendly(input);
     const actualMsg = `Actual: ${humanFriendlyInput}`;
+    const optEoi = index >= input.length ? ' end of input ' : ' ';
 
-    const specialCharsCount = (humanFriendlyInput.match(/(\\n|\\t)/g) || []).length;
+    const specialCharsCount = (humanFriendlyInput.slice(0, index + 1).match(/(\\r|\\n|\\t)/g) || []).length;
     const offset = 9 + specialCharsCount;
-    const indexMsg = `${Array(index + offset).join(' ')}^ at index ${index}!`;
+    const indexMsg = `${Array(index + offset).join(' ')}^${optEoi}at index ${index}!`;
 
     const msg = `\n${expectedMsg}\n${actualMsg}\n${indexMsg}`;
 

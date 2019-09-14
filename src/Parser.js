@@ -16,6 +16,10 @@ module.exports = class Parser {
   }
 
   run(input) {
+    if (typeof input !== 'string') {
+      throw new TypeError('Please provide a string!');
+    }
+
     const initialState = {
       input,
       remainingInput: input,

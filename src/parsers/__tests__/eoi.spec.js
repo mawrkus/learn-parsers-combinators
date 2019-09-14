@@ -2,7 +2,7 @@ const eoi = require('../eoi');
 const Parser = require('../../Parser');
 const ParserError = require('../../ParserError');
 
-const buildParserState = require('./buildParserState');
+const buildParserState = require('./helpers/buildParserState');
 
 describe('eoi()', () => {
   it('should return a parser', () => {
@@ -19,11 +19,12 @@ describe('eoi()', () => {
     describe('when parsing an empty input', () => {
       it('should return the correct parser state', () => {
         const endOfremainingInput = eoi();
-        const initialState = buildParserState({ remainingInput: '' });
+        const initialState = buildParserState({ input: '' });
 
         const newParserState = endOfremainingInput.parseFunction(initialState);
 
         expect(newParserState).toEqual({
+          input: '',
           remainingInput: '',
           index: 0,
           result: endOfremainingInput.eoiSymbol,
@@ -35,11 +36,12 @@ describe('eoi()', () => {
     describe('when parsing a non-empty input', () => {
       it('should return an error state', () => {
         const endOfremainingInput = eoi();
-        const initialState = buildParserState({ remainingInput: 'life is long' });
+        const initialState = buildParserState({ input: 'life is long' });
 
         const newParserState = endOfremainingInput.parseFunction(initialState);
 
         expect(newParserState).toEqual({
+          input: 'life is long',
           remainingInput: 'life is long',
           index: 0,
           result: null,
@@ -52,7 +54,7 @@ describe('eoi()', () => {
       it('should do nothing but return it', () => {
         const endOfremainingInput = eoi();
         const error = new ParserError('ParserError', 'Ooops!', '', {});
-        const initialState = buildParserState({ remainingInput: 'life is short', error });
+        const initialState = buildParserState({ input: 'life is short', error });
 
         const newParserState = endOfremainingInput.parseFunction(initialState);
 

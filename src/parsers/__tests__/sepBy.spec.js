@@ -3,7 +3,7 @@ const chr = require('../chr');
 const Parser = require('../../Parser');
 const ParserError = require('../../ParserError');
 
-const buildParserState = require('./buildParserState');
+const buildParserState = require('./helpers/buildParserState');
 
 describe('sepBy(sepParser)', () => {
   it('should return a factory function sepByFactory(valueParser)', () => {
@@ -35,11 +35,12 @@ describe('sepBy(sepParser)', () => {
         it('should return the correct parser state', () => {
           const sepBySlashes = sepBy(chr(','));
           const xSepBySlashes = sepBySlashes(chr('x'));
-          const initialState = buildParserState({ remainingInput: 'x' });
+          const initialState = buildParserState({ input: 'x' });
 
           const newParserState = xSepBySlashes.parseFunction(initialState);
 
           expect(newParserState).toEqual({
+            input: 'x',
             remainingInput: '',
             index: 1,
             result: ['x'],
@@ -52,11 +53,12 @@ describe('sepBy(sepParser)', () => {
         it('should return the correct parser state', () => {
           const sepBySlashes = sepBy(chr(','));
           const xSepBySlashes = sepBySlashes(chr('x'));
-          const initialState = buildParserState({ remainingInput: 'x)' });
+          const initialState = buildParserState({ input: 'x)' });
 
           const newParserState = xSepBySlashes.parseFunction(initialState);
 
           expect(newParserState).toEqual({
+            input: 'x)',
             remainingInput: ')',
             index: 1,
             result: ['x'],
@@ -69,11 +71,12 @@ describe('sepBy(sepParser)', () => {
         it('should return the correct parser state', () => {
           const sepBySlashes = sepBy(chr(','));
           const xSepBySlashes = sepBySlashes(chr('x'));
-          const initialState = buildParserState({ remainingInput: 'x,x' });
+          const initialState = buildParserState({ input: 'x,x' });
 
           const newParserState = xSepBySlashes.parseFunction(initialState);
 
           expect(newParserState).toEqual({
+            input: 'x,x',
             remainingInput: '',
             index: 3,
             result: ['x', 'x'],
@@ -86,11 +89,12 @@ describe('sepBy(sepParser)', () => {
         it('should return the correct parser state', () => {
           const sepBySlashes = sepBy(chr(','));
           const xSepBySlashes = sepBySlashes(chr('x'));
-          const initialState = buildParserState({ remainingInput: 'x,x)' });
+          const initialState = buildParserState({ input: 'x,x)' });
 
           const newParserState = xSepBySlashes.parseFunction(initialState);
 
           expect(newParserState).toEqual({
+            input: 'x,x)',
             remainingInput: ')',
             index: 3,
             result: ['x', 'x'],
@@ -103,11 +107,12 @@ describe('sepBy(sepParser)', () => {
         it('should return the correct parser state', () => {
           const sepBySlashes = sepBy(chr(','));
           const xSepBySlashes = sepBySlashes(chr('x'));
-          const initialState = buildParserState({ remainingInput: 'xx,' });
+          const initialState = buildParserState({ input: 'xx,' });
 
           const newParserState = xSepBySlashes.parseFunction(initialState);
 
           expect(newParserState).toEqual({
+            input: 'xx,',
             remainingInput: 'x,',
             index: 1,
             result: ['x'],
@@ -120,11 +125,12 @@ describe('sepBy(sepParser)', () => {
         it('should return the correct parser state', () => {
           const sepBySlashes = sepBy(chr(','));
           const xSepBySlashes = sepBySlashes(chr('x'));
-          const initialState = buildParserState({ remainingInput: 'y' });
+          const initialState = buildParserState({ input: 'y' });
 
           const newParserState = xSepBySlashes.parseFunction(initialState);
 
           expect(newParserState).toEqual({
+            input: 'y',
             remainingInput: 'y',
             index: 0,
             result: [],
@@ -137,11 +143,12 @@ describe('sepBy(sepParser)', () => {
         it('should return an error state', () => {
           const sepBySlashes = sepBy(chr(','));
           const xSepBySlashes = sepBySlashes(chr('x'));
-          const initialState = buildParserState({ remainingInput: 'x,' });
+          const initialState = buildParserState({ input: 'x,' });
 
           const newParserState = xSepBySlashes.parseFunction(initialState);
 
           expect(newParserState).toEqual({
+            input: 'x,',
             remainingInput: '',
             index: 2,
             result: null,
@@ -154,11 +161,12 @@ describe('sepBy(sepParser)', () => {
         it('should return the correct parser state', () => {
           const sepBySlashes = sepBy(chr(','));
           const xSepBySlashes = sepBySlashes(chr('x'));
-          const initialState = buildParserState({ remainingInput: ',x' });
+          const initialState = buildParserState({ input: ',x' });
 
           const newParserState = xSepBySlashes.parseFunction(initialState);
 
           expect(newParserState).toEqual({
+            input: ',x',
             remainingInput: ',x',
             index: 0,
             result: [],
@@ -171,11 +179,12 @@ describe('sepBy(sepParser)', () => {
         it('should return the correct parser state', () => {
           const sepBySlashes = sepBy(chr(','));
           const xSepBySlashes = sepBySlashes(chr('x'));
-          const initialState = buildParserState({ remainingInput: ',,x' });
+          const initialState = buildParserState({ input: ',,x' });
 
           const newParserState = xSepBySlashes.parseFunction(initialState);
 
           expect(newParserState).toEqual({
+            input: ',,x',
             remainingInput: ',,x',
             index: 0,
             result: [],
@@ -188,11 +197,12 @@ describe('sepBy(sepParser)', () => {
         it('should return an error state', () => {
           const sepBySlashes = sepBy(chr(','));
           const xSepBySlashes = sepBySlashes(chr('x'));
-          const initialState = buildParserState({ remainingInput: 'x,x,' });
+          const initialState = buildParserState({ input: 'x,x,' });
 
           const newParserState = xSepBySlashes.parseFunction(initialState);
 
           expect(newParserState).toEqual({
+            input: 'x,x,',
             remainingInput: '',
             index: 4,
             result: null,
@@ -206,7 +216,7 @@ describe('sepBy(sepParser)', () => {
           const sepBySlashes = sepBy(chr(','));
           const xSepBySlashes = sepBySlashes(chr('x'));
           const error = new ParserError('ParserError', 'Ooops!', '', {});
-          const initialState = buildParserState({ remainingInput: 'xyz', error });
+          const initialState = buildParserState({ input: 'xyz', error });
 
           const newParserState = xSepBySlashes.parseFunction(initialState);
 

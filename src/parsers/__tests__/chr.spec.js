@@ -2,7 +2,7 @@ const chr = require('../chr');
 const Parser = require('../../Parser');
 const ParserError = require('../../ParserError');
 
-const buildParserState = require('./buildParserState');
+const buildParserState = require('./helpers/buildParserState');
 
 describe('chr(expectedChar)', () => {
   it('should return a parser', () => {
@@ -31,11 +31,12 @@ describe('chr(expectedChar)', () => {
     describe('when parsing an empty input', () => {
       it('should return an error state', () => {
         const x = chr('x');
-        const initialState = buildParserState({ remainingInput: '' });
+        const initialState = buildParserState({ input: '' });
 
         const newParserState = x.parseFunction(initialState);
 
         expect(newParserState).toEqual({
+          input: '',
           remainingInput: '',
           index: 0,
           result: null,
@@ -47,11 +48,12 @@ describe('chr(expectedChar)', () => {
     describe('when parsing an input whose first char is "expectedChar"', () => {
       it('should return the correct parser state', () => {
         const x = chr('x');
-        const initialState = buildParserState({ remainingInput: 'xxx' });
+        const initialState = buildParserState({ input: 'xxx' });
 
         const newParserState = x.parseFunction(initialState);
 
         expect(newParserState).toEqual({
+          input: 'xxx',
           remainingInput: 'xx',
           index: 1,
           result: 'x',
@@ -63,11 +65,12 @@ describe('chr(expectedChar)', () => {
     describe('when parsing an input whost first char is not "expectedChar"', () => {
       it('should return an error state', () => {
         const x = chr('x');
-        const initialState = buildParserState({ remainingInput: 'yxx' });
+        const initialState = buildParserState({ input: 'yxx' });
 
         const newParserState = x.parseFunction(initialState);
 
         expect(newParserState).toEqual({
+          input: 'yxx',
           remainingInput: 'yxx',
           index: 0,
           result: null,
@@ -80,7 +83,7 @@ describe('chr(expectedChar)', () => {
       it('should do nothing but return it', () => {
         const x = chr('x');
         const error = new ParserError('ParserError', 'Ooops!', '', {});
-        const initialState = buildParserState({ remainingInput: 'xxx', error });
+        const initialState = buildParserState({ input: 'xxx', error });
 
         const newParserState = x.parseFunction(initialState);
 

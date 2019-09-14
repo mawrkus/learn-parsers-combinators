@@ -3,7 +3,7 @@ const chr = require('../chr');
 const Parser = require('../../Parser');
 const ParserError = require('../../ParserError');
 
-const buildParserState = require('./buildParserState');
+const buildParserState = require('./helpers/buildParserState');
 
 describe('manyOrNone(singleParser)', () => {
   it('should return a parser', () => {
@@ -20,11 +20,12 @@ describe('manyOrNone(singleParser)', () => {
     describe('when parsing an input that can be matched at least once by "singleParser" ', () => {
       it('should return the correct parser state', () => {
         const manyOrNoneX = manyOrNone(chr('x'));
-        const initialState = buildParserState({ remainingInput: 'xxxy' });
+        const initialState = buildParserState({ input: 'xxxy' });
 
         const newParserState = manyOrNoneX.parseFunction(initialState);
 
         expect(newParserState).toEqual({
+          input: 'xxxy',
           remainingInput: 'y',
           index: 3,
           result: ['x', 'x', 'x'],
@@ -36,11 +37,12 @@ describe('manyOrNone(singleParser)', () => {
     describe('when parsing an input that cannot be matched at least once by "singleParser" ', () => {
       it('should return the correct parser state', () => {
         const manyOrNoneX = manyOrNone(chr('x'));
-        const initialState = buildParserState({ remainingInput: 'yyz' });
+        const initialState = buildParserState({ input: 'yyz' });
 
         const newParserState = manyOrNoneX.parseFunction(initialState);
 
         expect(newParserState).toEqual({
+          input: 'yyz',
           remainingInput: 'yyz',
           index: 0,
           result: [],
@@ -53,7 +55,7 @@ describe('manyOrNone(singleParser)', () => {
       it('should do nothing but return it', () => {
         const manyOrNoneX = manyOrNone(chr('x'));
         const error = new ParserError('ParserError', 'Ooops!', '', {});
-        const initialState = buildParserState({ remainingInput: 'xxxy', error });
+        const initialState = buildParserState({ input: 'xxxy', error });
 
         const newParserState = manyOrNoneX.parseFunction(initialState);
 

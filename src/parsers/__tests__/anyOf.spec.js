@@ -3,7 +3,7 @@ const chr = require('../chr');
 const Parser = require('../../Parser');
 const ParserError = require('../../ParserError');
 
-const buildParserState = require('./buildParserState');
+const buildParserState = require('./helpers/buildParserState');
 
 describe('anyOf(parsers)', () => {
   it('should return a parser', () => {
@@ -20,11 +20,12 @@ describe('anyOf(parsers)', () => {
     describe('when parsing an input that can be matched by one of the parsers', () => {
       it('should return the correct parser state', () => {
         const xyz = anyOf([chr('a'), chr('x'), chr('b')]);
-        const initialState = buildParserState({ remainingInput: 'xyz' });
+        const initialState = buildParserState({ input: 'xyz' });
 
         const newParserState = xyz.parseFunction(initialState);
 
         expect(newParserState).toEqual({
+          input: 'xyz',
           remainingInput: 'yz',
           index: 1,
           result: 'x',
@@ -36,11 +37,12 @@ describe('anyOf(parsers)', () => {
     describe('when parsing an input that cannot be matched by any of the parsers', () => {
       it('should return an error state', () => {
         const xyz = anyOf([chr('a'), chr('o'), chr('b')]);
-        const initialState = buildParserState({ remainingInput: 'xyz' });
+        const initialState = buildParserState({ input: 'xyz' });
 
         const newParserState = xyz.parseFunction(initialState);
 
         expect(newParserState).toEqual({
+          input: 'xyz',
           remainingInput: 'xyz',
           index: 0,
           result: null,
@@ -53,7 +55,7 @@ describe('anyOf(parsers)', () => {
       it('should do nothing but return it', () => {
         const xyz = anyOf([chr('x'), chr('y'), chr('z')]);
         const error = new ParserError('ParserError', 'Ooops!', '', {});
-        const initialState = buildParserState({ remainingInput: 'xyz', error });
+        const initialState = buildParserState({ input: 'xyz', error });
 
         const newParserState = xyz.parseFunction(initialState);
 

@@ -1,5 +1,5 @@
 module.exports = (state) => ({
-  remainingInput: '',
+  remainingInput: state.input,
   index: 0,
   result: null,
   error: null,

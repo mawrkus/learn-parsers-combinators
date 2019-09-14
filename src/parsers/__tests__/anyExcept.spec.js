@@ -3,7 +3,7 @@ const chr = require('../chr');
 const Parser = require('../../Parser');
 const ParserError = require('../../ParserError');
 
-const buildParserState = require('./buildParserState');
+const buildParserState = require('./helpers/buildParserState');
 
 describe('anyExcept(exceptParser)', () => {
   it('should return a parser', () => {
@@ -20,11 +20,12 @@ describe('anyExcept(exceptParser)', () => {
     describe('when parsing an input that can be matched at least once by "exceptParser"', () => {
       it('should return the correct parser state', () => {
         const anyExceptX = anyExcept(chr('x'));
-        const initialState = buildParserState({ remainingInput: 'aaax' });
+        const initialState = buildParserState({ input: 'aaax' });
 
         const newParserState = anyExceptX.parseFunction(initialState);
 
         expect(newParserState).toEqual({
+          input: 'aaax',
           remainingInput: 'x',
           index: 3,
           result: 'aaa',
@@ -36,11 +37,12 @@ describe('anyExcept(exceptParser)', () => {
     describe('when parsing an input that cannot be matched at least once by "exceptParser"', () => {
       it('should return the correct parser state', () => {
         const anyExceptX = anyExcept(chr('x'));
-        const initialState = buildParserState({ remainingInput: 'yyz' });
+        const initialState = buildParserState({ input: 'yyz' });
 
         const newParserState = anyExceptX.parseFunction(initialState);
 
         expect(newParserState).toEqual({
+          input: 'yyz',
           remainingInput: '',
           index: 3,
           result: 'yyz',
@@ -53,7 +55,7 @@ describe('anyExcept(exceptParser)', () => {
       it('should do nothing but return it', () => {
         const anyExceptX = anyExcept(chr('x'));
         const error = new ParserError('ParserError', 'Ooops!', '', {});
-        const initialState = buildParserState({ remainingInput: 'xxxy', error });
+        const initialState = buildParserState({ input: 'xxxy', error });
 
         const newParserState = anyExceptX.parseFunction(initialState);
 

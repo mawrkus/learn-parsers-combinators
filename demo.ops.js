@@ -4,6 +4,7 @@ const Parser = require('./src/Parser');
 const {
   anyExcept,
   anyOf,
+  between,
   chr,
   eoi,
   lazy,
@@ -15,13 +16,6 @@ const {
   str,
 } = require('./src/parsers');
 /* eslint-enable no-unused-vars */
-
-const between = (leftParser, rightParser) => (contentParser) => sequenceOf([
-  leftParser,
-  contentParser,
-  rightParser,
-])
-  .map((result) => result[1]);
 
 class ExpressionParser extends Parser {
   constructor() {

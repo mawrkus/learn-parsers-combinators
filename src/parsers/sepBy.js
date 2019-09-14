@@ -16,8 +16,9 @@ module.exports = (sepParser) => {
         return parserState;
       }
 
-      let currentState = parserState;
       const results = [];
+      let currentState = parserState;
+      let valueState;
 
       // eslint-disable-next-line no-constant-condition
       while (true) {
@@ -41,9 +42,11 @@ module.exports = (sepParser) => {
 
         results.push(currentState.result);
 
+        valueState = currentState;
         currentState = sepParser.parseFunction(currentState);
 
         if (currentState.error) {
+          currentState = valueState;
           break;
         }
       }

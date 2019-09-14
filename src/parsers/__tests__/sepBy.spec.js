@@ -30,7 +30,7 @@ describe('sepBy(sepParser)', () => {
       });
     });
 
-    describe('the parser returned SepBy(chr("x"))(chr(","))', () => {
+    describe('the parser returned sepBy(chr(","))(chr("x"))', () => {
       describe('when parsing the input "x', () => {
         it('should return the correct parser state', () => {
           const sepBySlashes = sepBy(chr(','));
@@ -41,6 +41,23 @@ describe('sepBy(sepParser)', () => {
 
           expect(newParserState).toEqual({
             remainingInput: '',
+            index: 1,
+            result: ['x'],
+            error: null,
+          });
+        });
+      });
+
+      describe('when parsing the input "x)"', () => {
+        it('should return the correct parser state', () => {
+          const sepBySlashes = sepBy(chr(','));
+          const xSepBySlashes = sepBySlashes(chr('x'));
+          const initialState = buildParserState({ remainingInput: 'x)' });
+
+          const newParserState = xSepBySlashes.parseFunction(initialState);
+
+          expect(newParserState).toEqual({
+            remainingInput: ')',
             index: 1,
             result: ['x'],
             error: null,

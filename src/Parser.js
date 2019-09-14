@@ -1,7 +1,7 @@
 const debug = false;
 
 module.exports = class Parser {
-  constructor(parseFunction, type='Parser') {
+  constructor(parseFunction, type = 'Parser') {
     this.type = type;
     this.typeLabel = '';
 

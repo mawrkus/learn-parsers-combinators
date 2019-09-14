@@ -1,18 +1,26 @@
+const debug = false;
+
 module.exports = class Parser {
-  constructor(parseFunction, type) {
+  constructor(parseFunction, type='Parser') {
+    this.type = type;
+    this.typeLabel = '';
+
     this.parseFunction = (parserState) => {
-      // console.log('pre-parseFunction: %s -> ', type, parserState);
+      if (debug) {
+        console.log('[PRE] -> %s', this.type, this.typeLabel);
+        console.log(parserState);
+      }
 
       const nextState = parseFunction(parserState);
 
-      /* console.log('post-parseFunction: %s -> ', type, nextState);
-      if (nextState.error) {
-        console.error(nextState.error);
-      } */
+      if (debug) {
+        console.log('[POST] <- %s', this.type, this.typeLabel);
+        console.log(nextState);
+        console.log('------------------');
+      }
 
       return nextState;
     };
-    this.type = type;
   }
 
   run(input) {
@@ -45,5 +53,10 @@ module.exports = class Parser {
         error: error ? errorFunction(error) : error,
       };
     }, this.type);
+  }
+
+  label(label) {
+    this.typeLabel = label;
+    return this;
   }
 };

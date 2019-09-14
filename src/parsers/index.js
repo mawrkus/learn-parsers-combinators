@@ -1,5 +1,6 @@
 const anyExcept = require('./anyExcept');
 const anyOf = require('./anyOf');
+const between = require('./between');
 const chr = require('./chr');
 const eoi = require('./eoi');
 const lazy = require('./lazy');
@@ -13,6 +14,7 @@ const str = require('./str');
 module.exports = {
   anyExcept,
   anyOf,
+  between,
   chr,
   eoi,
   lazy,

@@ -10,7 +10,7 @@ module.exports = (exceptParser) => {
       return parserState;
     }
 
-    let result = '';
+    let result = null;
     let currentState = parserState;
 
     // eslint-disable-next-line no-constant-condition
@@ -22,10 +22,16 @@ module.exports = (exceptParser) => {
       } = exceptParser.parseFunction(currentState);
 
       if (!error || !remainingInput.length) {
-        return currentState;
+        return {
+          ...currentState,
+          // proper deal with some edge cases, e.g.:
+          // sepBy(chr(';'))(anyExcept(chr(';')) on input 'x;'
+          result,
+          error: null,
+        };
       }
 
-      result = `${result}${remainingInput[0]}`;
+      result = `${result || ''}${remainingInput[0]}`;
 
       currentState = {
         ...currentState,

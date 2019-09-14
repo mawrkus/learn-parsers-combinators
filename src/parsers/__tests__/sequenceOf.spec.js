@@ -17,7 +17,7 @@ describe('sequenceOf(parsers)', () => {
   });
 
   describe('the parser returned', () => {
-    describe('when parsing a target string that can be matched by the sequence of parsers', () => {
+    describe('when parsing an input that can be matched by the sequence of parsers', () => {
       it('should return the correct parser state', () => {
         const xyz = sequenceOf([chr('x'), chr('y'), chr('z')]);
         const initialState = buildParserState({ remainingInput: 'xyz' });
@@ -33,7 +33,7 @@ describe('sequenceOf(parsers)', () => {
       });
     });
 
-    describe('when parsing a target string that cannot be matched by the sequence of parsers', () => {
+    describe('when parsing an input that cannot be matched by the sequence of parsers', () => {
       it('should return an error state', () => {
         const xyz = sequenceOf([chr('x'), chr('o'), chr('z')]);
         const initialState = buildParserState({ remainingInput: 'xyz' });

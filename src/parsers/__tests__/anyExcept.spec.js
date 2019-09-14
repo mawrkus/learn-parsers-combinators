@@ -17,7 +17,7 @@ describe('anyExcept(exceptParser)', () => {
   });
 
   describe('the parser returned', () => {
-    describe('when parsing a target string that can be matched at least once by "exceptParser"', () => {
+    describe('when parsing an input that can be matched at least once by "exceptParser"', () => {
       it('should return the correct parser state', () => {
         const anyExceptX = anyExcept(chr('x'));
         const initialState = buildParserState({ remainingInput: 'aaax' });
@@ -33,7 +33,7 @@ describe('anyExcept(exceptParser)', () => {
       });
     });
 
-    describe('when parsing a target string that cannot be matched at least once by "exceptParser"', () => {
+    describe('when parsing an input that cannot be matched at least once by "exceptParser"', () => {
       it('should return the correct parser state', () => {
         const anyExceptX = anyExcept(chr('x'));
         const initialState = buildParserState({ remainingInput: 'yyz' });

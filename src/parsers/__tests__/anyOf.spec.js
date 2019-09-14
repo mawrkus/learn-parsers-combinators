@@ -17,7 +17,7 @@ describe('anyOf(parsers)', () => {
   });
 
   describe('the parser returned', () => {
-    describe('when parsing a target string that can be matched by one of the parsers', () => {
+    describe('when parsing an input that can be matched by one of the parsers', () => {
       it('should return the correct parser state', () => {
         const xyz = anyOf([chr('a'), chr('x'), chr('b')]);
         const initialState = buildParserState({ remainingInput: 'xyz' });
@@ -33,7 +33,7 @@ describe('anyOf(parsers)', () => {
       });
     });
 
-    describe('when parsing a target string that cannot be matched by any of the parsers', () => {
+    describe('when parsing an input that cannot be matched by any of the parsers', () => {
       it('should return an error state', () => {
         const xyz = anyOf([chr('a'), chr('o'), chr('b')]);
         const initialState = buildParserState({ remainingInput: 'xyz' });

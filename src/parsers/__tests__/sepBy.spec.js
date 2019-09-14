@@ -31,7 +31,7 @@ describe('sepBy(sepParser)', () => {
     });
 
     describe('the parser returned SepBy(chr("x"))(chr(","))', () => {
-      describe('when parsing the target string "x', () => {
+      describe('when parsing the input "x', () => {
         it('should return the correct parser state', () => {
           const sepBySlashes = sepBy(chr(','));
           const xSepBySlashes = sepBySlashes(chr('x'));
@@ -48,7 +48,7 @@ describe('sepBy(sepParser)', () => {
         });
       });
 
-      describe('when parsing the target string "x,x"', () => {
+      describe('when parsing the input "x,x"', () => {
         it('should return the correct parser state', () => {
           const sepBySlashes = sepBy(chr(','));
           const xSepBySlashes = sepBySlashes(chr('x'));
@@ -65,7 +65,7 @@ describe('sepBy(sepParser)', () => {
         });
       });
 
-      describe('when parsing the target string "x,x)"', () => {
+      describe('when parsing the input "x,x)"', () => {
         it('should return the correct parser state', () => {
           const sepBySlashes = sepBy(chr(','));
           const xSepBySlashes = sepBySlashes(chr('x'));
@@ -82,7 +82,7 @@ describe('sepBy(sepParser)', () => {
         });
       });
 
-      describe('when parsing the target string "xx,"', () => {
+      describe('when parsing the input "xx,"', () => {
         it('should return the correct parser state', () => {
           const sepBySlashes = sepBy(chr(','));
           const xSepBySlashes = sepBySlashes(chr('x'));
@@ -99,7 +99,7 @@ describe('sepBy(sepParser)', () => {
         });
       });
 
-      describe('when parsing the target string "y"', () => {
+      describe('when parsing the input "y"', () => {
         it('should return the correct parser state', () => {
           const sepBySlashes = sepBy(chr(','));
           const xSepBySlashes = sepBySlashes(chr('x'));
@@ -116,7 +116,7 @@ describe('sepBy(sepParser)', () => {
         });
       });
 
-      describe('when parsing the target string "x,"', () => {
+      describe('when parsing the input "x,"', () => {
         it('should return an error state', () => {
           const sepBySlashes = sepBy(chr(','));
           const xSepBySlashes = sepBySlashes(chr('x'));
@@ -133,7 +133,7 @@ describe('sepBy(sepParser)', () => {
         });
       });
 
-      describe('when parsing the target string ",x"', () => {
+      describe('when parsing the input ",x"', () => {
         it('should return the correct parser state', () => {
           const sepBySlashes = sepBy(chr(','));
           const xSepBySlashes = sepBySlashes(chr('x'));
@@ -150,7 +150,7 @@ describe('sepBy(sepParser)', () => {
         });
       });
 
-      describe('when parsing the target string ",,x"', () => {
+      describe('when parsing the input ",,x"', () => {
         it('should return the correct parser state', () => {
           const sepBySlashes = sepBy(chr(','));
           const xSepBySlashes = sepBySlashes(chr('x'));
@@ -167,7 +167,7 @@ describe('sepBy(sepParser)', () => {
         });
       });
 
-      describe('when parsing the target string "x,x,"', () => {
+      describe('when parsing the input "x,x,"', () => {
         it('should return an error state', () => {
           const sepBySlashes = sepBy(chr(','));
           const xSepBySlashes = sepBySlashes(chr('x'));

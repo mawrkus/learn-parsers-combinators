@@ -17,7 +17,7 @@ describe('manyOrNone(singleParser)', () => {
   });
 
   describe('the parser returned', () => {
-    describe('when parsing a target string that can be matched at least once by "singleParser" ', () => {
+    describe('when parsing an input that can be matched at least once by "singleParser" ', () => {
       it('should return the correct parser state', () => {
         const manyOrNoneX = manyOrNone(chr('x'));
         const initialState = buildParserState({ remainingInput: 'xxxy' });
@@ -33,7 +33,7 @@ describe('manyOrNone(singleParser)', () => {
       });
     });
 
-    describe('when parsing a target string that cannot be matched at least once by "singleParser" ', () => {
+    describe('when parsing an input that cannot be matched at least once by "singleParser" ', () => {
       it('should return the correct parser state', () => {
         const manyOrNoneX = manyOrNone(chr('x'));
         const initialState = buildParserState({ remainingInput: 'yyz' });

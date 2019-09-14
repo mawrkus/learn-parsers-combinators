@@ -16,7 +16,7 @@ describe('eoi()', () => {
       expect(typeof endOfremainingInput.eoiSymbol).toBe('symbol');
     });
 
-    describe('when parsing an empty target string', () => {
+    describe('when parsing an empty input', () => {
       it('should return the correct parser state', () => {
         const endOfremainingInput = eoi();
         const initialState = buildParserState({ remainingInput: '' });
@@ -32,7 +32,7 @@ describe('eoi()', () => {
       });
     });
 
-    describe('when parsing a non-empty target string', () => {
+    describe('when parsing a non-empty input', () => {
       it('should return an error state', () => {
         const endOfremainingInput = eoi();
         const initialState = buildParserState({ remainingInput: 'life is long' });

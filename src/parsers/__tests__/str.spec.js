@@ -22,7 +22,7 @@ describe('str(expectedString)', () => {
   });
 
   describe('the parser returned', () => {
-    describe('when parsing an empty target string', () => {
+    describe('when parsing an empty input', () => {
       it('should return an error state', () => {
         const rosebud = str('rosebud');
         const initialState = buildParserState({ remainingInput: '' });
@@ -38,7 +38,7 @@ describe('str(expectedString)', () => {
       });
     });
 
-    describe('when parsing a target string that does not start with "expectedString"', () => {
+    describe('when parsing an input that does not start with "expectedString"', () => {
       it('should return an error state', () => {
         const rosebud = str('rosebud');
         const initialState = buildParserState({ remainingInput: 'its name was rosebud' });
@@ -54,7 +54,7 @@ describe('str(expectedString)', () => {
       });
     });
 
-    describe('when parsing a target string that starts with "expectedString"', () => {
+    describe('when parsing an input that starts with "expectedString"', () => {
       it('should return the correct parser state', () => {
         const rosebud = str('rosebud');
         const initialState = buildParserState({ remainingInput: 'rosebud was its name' });

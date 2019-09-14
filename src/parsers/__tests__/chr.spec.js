@@ -28,7 +28,7 @@ describe('chr(expectedChar)', () => {
   });
 
   describe('the parser returned', () => {
-    describe('when parsing an empty target string', () => {
+    describe('when parsing an empty input', () => {
       it('should return an error state', () => {
         const x = chr('x');
         const initialState = buildParserState({ remainingInput: '' });
@@ -44,7 +44,7 @@ describe('chr(expectedChar)', () => {
       });
     });
 
-    describe('when parsing a target string whose first char is "expectedChar"', () => {
+    describe('when parsing an input whose first char is "expectedChar"', () => {
       it('should return the correct parser state', () => {
         const x = chr('x');
         const initialState = buildParserState({ remainingInput: 'xxx' });
@@ -60,7 +60,7 @@ describe('chr(expectedChar)', () => {
       });
     });
 
-    describe('when parsing a target string whost first char is not "expectedChar"', () => {
+    describe('when parsing an input whost first char is not "expectedChar"', () => {
       it('should return an error state', () => {
         const x = chr('x');
         const initialState = buildParserState({ remainingInput: 'yxx' });

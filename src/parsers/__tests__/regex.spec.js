@@ -23,7 +23,7 @@ describe('regex(re)', () => {
   });
 
   describe('the parser returned', () => {
-    describe('when parsing a target string that "re" matches', () => {
+    describe('when parsing an input that "re" matches', () => {
       it('should return the proper parser state (/^\\w+/)', () => {
         const identifier = regex(/^\w+/);
         const initialState = buildParserState({ remainingInput: 'Kode9 (=)' });
@@ -53,7 +53,7 @@ describe('regex(re)', () => {
       });
     });
 
-    describe('when parsing an empty target string', () => {
+    describe('when parsing an empty input', () => {
       it('should return a parser error state', () => {
         const digits = regex(/^[0-9]*/);
         const initialState = buildParserState({ remainingInput: '' });
@@ -70,7 +70,7 @@ describe('regex(re)', () => {
     });
   });
 
-  describe('when parsing a target string that "re" does not match', () => {
+  describe('when parsing an input that "re" does not match', () => {
     it('should return a parser error state', () => {
       const digits = regex(/^[0-9]+/);
       const initialState = buildParserState({ remainingInput: 'Kode9 (=)' });

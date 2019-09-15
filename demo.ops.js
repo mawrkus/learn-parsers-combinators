@@ -19,11 +19,14 @@ const {
 
 class ExpressionParser extends Parser {
   constructor() {
-    const lParenParser = regex(/^[ ]*\([ ]*/);
-    const rParenParser = regex(/^[ ]*\)[ ]*/);
+    const eoiParser = eoi();
+    const optionalWhitespaces = regex(/^[ \n\r\t]*/);
+    const betweenOptionalWhitespaces = between(optionalWhitespaces, anyOf([eoiParser, optionalWhitespaces]));
+    const lParenParser = betweenOptionalWhitespaces(chr('('));
+    const rParenParser = betweenOptionalWhitespaces(chr(')'));
     const betweenParensParser = between(lParenParser, rParenParser);
-    const operatorParser = regex(/^[ ]*(\+|-|\*|\/)[ ]*/, true);
-    const numberParser = regex(/^[ ]*((-|\+)?[0-9]+(\.[0-9]+)?)[ ]*/, true).map((n) => Number(n));
+    const operatorParser = betweenOptionalWhitespaces(anyOf([chr('+'), chr('-'), chr('*'), chr('/')]));
+    const numberParser = betweenOptionalWhitespaces(regex(/^(-|\+)?[0-9]+(\.[0-9]+)?/)).map((n) => Number(n));
 
     const expressionParser = lazy(() => anyOf([
       numberParser,
@@ -52,11 +55,25 @@ class ExpressionParser extends Parser {
   }
 }
 
-const parser = new ExpressionParser();
-const parsed = parser.run('((6.3 - (100 / -25)) * (0.1 + 2.42))');
-
-if (parsed.error) {
-  console.error(parsed.error);
-} else {
-  console.log('Parsed ->', JSON.stringify(parsed, null, 1));
+function logOutput(parsed) {
+  console.log('%s ->', JSON.stringify(parsed.input));
+  if (parsed.error) {
+    console.error(parsed.error);
+  } else {
+    console.log(JSON.stringify(parsed, null, 1));
+  }
+  console.log('__________________________________________________________________________________');
 }
+
+[
+  '',
+  // '42',
+  // '42.3',
+  // '-42',
+  // '-42.3',
+  // '(-42.3 * 0.1)',
+  // '((6.3 - (100 / -26)) * (0.1 + 2.48))',
+].forEach((input) => {
+  const parser = new ExpressionParser();
+  logOutput(parser.run(input));
+});

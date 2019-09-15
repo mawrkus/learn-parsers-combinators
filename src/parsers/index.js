@@ -11,7 +11,25 @@ const sepBy = require('./sepBy');
 const sequenceOf = require('./sequenceOf');
 const str = require('./str');
 
+/* function updateStateResult(parserState, result) {
+  return {
+    ...parserState,
+    result,
+    error: null,
+  };
+}
+
+function updateStateError(parserState, error) {
+  return {
+    ...parserState,
+    error,
+    result: null,
+  };
+} */
+
 module.exports = {
+  /* updateStateResult,
+  updateStateError, */
   anyExcept,
   anyOf,
   between,

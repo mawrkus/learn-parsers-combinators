@@ -4,6 +4,8 @@
 
 - fixed escaped quotes in quotes (CSV, JSON)
 - multiple parens usage in OPS, e.g. ((42))
+- updateStateResult,
+- updateStateError
 
 ## Resources
 

@@ -23,32 +23,29 @@ class CsvParser extends Parser {
     delimiter = ';',
     eol = '\n',
     headers = false,
+    trim = false,
   } = {}) {
     const quoteParser = quote !== false ? chr(quote) : null;
     const betweenQuotesParser = between(quoteParser, quoteParser);
     const delimiterParser = chr(delimiter);
     const eolParser = str(eol);
     const eoiParser = eoi();
+    const trimFn = trim ? s => s.trim() : s => s;
+    const mapFieldResult = field => field === null ? '' : trimFn(field);
 
     const fieldParser = quote === false
-      ? regex(new RegExp(`^[^${delimiter}${eol}]*`))
-      : betweenQuotesParser(regex(new RegExp(`^[^${quote}]*`)));
+      ? anyExcept(anyOf([delimiterParser, eolParser])).map(mapFieldResult)
+      : anyOf([
+        betweenQuotesParser(anyExcept(quoteParser)).map(mapFieldResult),
+        anyExcept(quoteParser).map(() => ''),
+      ]);
 
-    const lineParser = sequenceOf([
-      sepBy(delimiterParser)(fieldParser),
-      anyOf([
-        eolParser,
-        eoiParser,
-      ]),
-    ])
-      .map(([fields]) => fields);
+    const lineParser = sepBy(delimiterParser)(fieldParser);
+    const linesParser = sepBy(eolParser)(lineParser);
 
     const csvParser = headers
-      ? sequenceOf([
-        lineParser,
-        many(lineParser),
-      ])
-        .map(([headerLine, lines]) => {
+      ? linesParser
+        .map(([headerLine, ...lines]) => {
           const objects = lines.map((line) => line.reduce((acc, field, i) => ({
             ...acc,
             [headerLine[i]]: field,
@@ -60,7 +57,7 @@ class CsvParser extends Parser {
             value: objects,
           };
         })
-      : many(lineParser)
+      : linesParser
         .map((lines) => ({
           type: 'CSV',
           linesCount: lines.length,
@@ -75,27 +72,80 @@ class CsvParser extends Parser {
   }
 }
 
-/* const parser = new CsvParser({
-  quote: false,
-});
-const parsed = parser.run('tina;marc\ncata;carlos\n'); */
+function logOutput(parsed) {
+  console.log('%s ->', JSON.stringify(parsed.input));
+  if (parsed.error) {
+    console.error(parsed.error);
+  } else {
+    console.log(JSON.stringify(parsed, null, 1));
+  }
+  console.log('__________________________________________________________________________________');
+}
 
-const parser = new CsvParser({
+let parser;
+
+/* [
+  '',
+  '\n',
+  '\n  \n',
+  ';',
+  ';\n',
+  ' ; ',
+  ' \n',
+  ' ;',
+  ' ;\n',
+  'tine',
+  'tine;',
+  'tine;\n',
+  'tine;marc',
+  'tine;marc;',
+  'tine;marc;\n',
+  ' tine ; marc ;    \n',
+  'tina;marc\ncata;carlos',
+].forEach((input) => {
+  const parser = new CsvParser({
+    quote: false,
+    // trim: true,
+  });
+  logOutput(parser.run(input));
+}); */
+
+/* [
+  '',
+  '\n',
+  '\n  \n',
+  '""',
+  '""\n',
+  '"";""',
+  '"";""\n',
+  '" ";" "',
+  '" "\n',
+  '" ";',
+  '" ";\n',
+  '"tine"',
+  '"tine";',
+  '"tine";\n',
+  '"tine";"marc"',
+  '"tine";"marc";',
+  '"tine";"marc";\n',
+  '"tina";"marc"\n"cata";"carlos"'
+].forEach((input) => {
+  const parser = new CsvParser();
+  logOutput(parser.run(input));
+}); */
+
+parser = new CsvParser({
   quote: false,
   delimiter: ',',
   eol: '\n',
   headers: true,
+  trim: true,
 });
-const parsed = parser.run(`who,ok?,when?
-tina,yes,now
-cata,yes,later
-nana,no,now
-marc,yes,later
-carlos,yes,later
-bogdan,no,now`);
 
-if (parsed.error) {
-  console.error(parsed.error);
-} else {
-  console.log('Parsed ->', JSON.stringify(parsed, null, 1));
-}
+logOutput(parser.run(`who,ok?,when?
+  tina,yes,now
+  cata,yes,later
+  nana,no,now
+  marc,,later
+  carlos,yes,later
+  bogdan,no,now`));

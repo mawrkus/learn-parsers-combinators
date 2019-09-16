@@ -42,7 +42,7 @@ class JsonParser extends Parser {
           str('\\"'),
           not(chr('"')),
         ]),
-      ),
+      ).map(s => s.join('')),
     );
 
     const value = lazy(() => betweenOptionalWhitespaces(
@@ -78,7 +78,7 @@ class JsonParser extends Parser {
       object,
     ]);
 
-    super(string.parseFunction, 'JsonParser');
+    super(json.parseFunction, 'JsonParser');
   }
 
   run(input) {
@@ -124,7 +124,7 @@ function logOutput(parsed) {
   // '[ "one", 2, -3.14, true, false, null, [], {} ]',
   // '[ ["one"], [2, -3.14], [true, [false], [[null, [], {}]]] ]',
   // '[1,"2",-3.1415926, true, [false, "test", null, "890"] ,  [{"test":null}]  ,{}, {  }  , { "tags": [{}] } ]',
-  '"1\\"X\\"2"',
+  '{ "name": "Theodore \\"Mawrkus\\" Smith" }',
 ].forEach((input) => {
   const parser = new JsonParser();
   logOutput(parser.run(input));

@@ -6,30 +6,13 @@ const eoi = require('./eoi');
 const lazy = require('./lazy');
 const many = require('./many');
 const manyOrNone = require('./manyOrNone');
+const not = require('./not');
 const regex = require('./regex');
 const sepBy = require('./sepBy');
 const sequenceOf = require('./sequenceOf');
 const str = require('./str');
 
-/* function updateStateResult(parserState, result) {
-  return {
-    ...parserState,
-    result,
-    error: null,
-  };
-}
-
-function updateStateError(parserState, error) {
-  return {
-    ...parserState,
-    error,
-    result: null,
-  };
-} */
-
 module.exports = {
-  /* updateStateResult,
-  updateStateError, */
   anyExcept,
   anyOf,
   between,
@@ -38,6 +21,7 @@ module.exports = {
   lazy,
   many,
   manyOrNone,
+  not,
   regex,
   sepBy,
   sequenceOf,

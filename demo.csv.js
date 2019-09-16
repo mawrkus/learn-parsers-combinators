@@ -10,6 +10,7 @@ const {
   lazy,
   many,
   manyOrNone,
+  not,
   regex,
   sepBy,
   sequenceOf,

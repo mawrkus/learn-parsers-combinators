@@ -10,6 +10,7 @@ const {
   lazy,
   many,
   manyOrNone,
+  not,
   regex,
   sepBy,
   sequenceOf,
@@ -19,10 +20,17 @@ const {
 
 class JsonParser extends Parser {
   constructor() {
-    const betweenBrackets = between(chr('['), chr(']'));
-    const betweenBraces = between(chr('{'), chr('}'));
-    const optionalWhitespaces = manyOrNone(regex(/^[ \n\r\t]+/));
-    const betweenOptionalWhitespaces = between(optionalWhitespaces, optionalWhitespaces);
+    const eoiParser = eoi();
+    const optionalWhitespaces = regex(/^[ \n\r\t]*/);
+    const betweenOptionalWhitespaces = between(optionalWhitespaces, anyOf([eoiParser, optionalWhitespaces]));
+    const betweenBrackets = between(
+      betweenOptionalWhitespaces(chr('[')),
+      betweenOptionalWhitespaces(chr(']')),
+    );
+    const betweenBraces = between(
+      betweenOptionalWhitespaces(chr('{')),
+      betweenOptionalWhitespaces(chr('}')),
+    );
     const betweenQuotes = between(chr('"'), chr('"'));
     const sepByComma = sepBy(chr(','));
 
@@ -32,11 +40,9 @@ class JsonParser extends Parser {
       manyOrNone(
         anyOf([
           str('\\"'),
-          // TODO: fixme
-          // anyExcept(chr('"')),
-          regex(/^[^\\"]+/),
+          not(chr('"')),
         ]),
-      ).map(r => r.join('')),
+      ),
     );
 
     const value = lazy(() => betweenOptionalWhitespaces(
@@ -51,22 +57,20 @@ class JsonParser extends Parser {
       ])),
     );
 
-    const array = betweenOptionalWhitespaces(
-      betweenBrackets(
-        sepByComma(value),
-      ),
+    const array = betweenBrackets(
+      sepByComma(value),
     );
 
-    const object = betweenOptionalWhitespaces(
-      betweenBraces(
-        sepByComma(
-          sequenceOf([
-            betweenOptionalWhitespaces(string),
-            chr(':'),
-            value,
-          ]),
-        ).map(pairs => pairs.reduce((acc, [name, colon, value]) => ({ ...acc, [name]: value }), {})),
-      ),
+    const nameValuePair = sequenceOf([
+      betweenOptionalWhitespaces(string),
+      chr(':'),
+      value,
+    ]);
+
+    const object = betweenBraces(
+      sepByComma(
+        nameValuePair,
+      ).map(pairs => pairs.reduce((acc, [name, colon, value]) => ({ ...acc, [name]: value }), {})),
     );
 
     const json = anyOf([
@@ -74,7 +78,7 @@ class JsonParser extends Parser {
       object,
     ]);
 
-    super(json.parseFunction, 'JsonParser');
+    super(string.parseFunction, 'JsonParser');
   }
 
   run(input) {
@@ -83,10 +87,11 @@ class JsonParser extends Parser {
 }
 
 function logOutput(parsed) {
+  console.log('%s ->', JSON.stringify(parsed.input));
   if (parsed.error) {
-    console.log('%s ->', parsed.input, parsed.error);
+    console.error(parsed.error);
   } else {
-    console.log('%s ->', parsed.input, JSON.stringify(parsed, null, 1));
+    console.log(JSON.stringify(parsed, null, 1));
   }
   console.log('__________________________________________________________________________________');
 }
@@ -118,8 +123,8 @@ function logOutput(parsed) {
   // '[ "one" ]',
   // '[ "one", 2, -3.14, true, false, null, [], {} ]',
   // '[ ["one"], [2, -3.14], [true, [false], [[null, [], {}]]] ]',
-  // '[1,"2",-3.1415926, true, [false, "test", null, "890"] ,  [{"test":null}]  ,{}, {    }  , {     } ]',
-  '["\n\t->\t\\"maybe\\"  <-\r\n"]',
+  // '[1,"2",-3.1415926, true, [false, "test", null, "890"] ,  [{"test":null}]  ,{}, {  }  , { "tags": [{}] } ]',
+  '"1\\"X\\"2"',
 ].forEach((input) => {
   const parser = new JsonParser();
   logOutput(parser.run(input));

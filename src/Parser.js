@@ -39,9 +39,26 @@ module.exports = class Parser {
     return this.parseFunction(initialState);
   }
 
+  /* static updateStateResult(parserState, result) {
+    return {
+      ...parserState,
+      result,
+      error: null,
+    };
+  }
+
+  static updateStateError(parserState, error) {
+    return {
+      ...parserState,
+      error,
+      result: null,
+    };
+  } */
+
   map(successFunction, errorFunction = (e) => e) {
     return new Parser((parserState) => {
       const nextState = this.parseFunction(parserState);
+
       const {
         result,
         error,

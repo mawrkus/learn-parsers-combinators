@@ -25,7 +25,7 @@ module.exports = (exceptParser) => {
         return {
           ...currentState,
           // proper deal with some edge cases, e.g.:
-          // sepBy(chr(';'))(anyExcept(chr(';')) on input 'x;'
+          // sepByOrNone(chr(';'))(anyExcept(chr(';')) on input 'x;'
           result,
           error: null,
         };

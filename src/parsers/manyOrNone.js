@@ -2,10 +2,6 @@ const Parser = require('../Parser');
 const many = require('./many');
 
 module.exports = (singleParser) => {
-  if (!(singleParser instanceof Parser)) {
-    throw new TypeError('Please provide an instance of the "Parser" class!');
-  }
-
   const manyParser = many(singleParser);
 
   const manyOrNoneParser = new Parser((parserState) => {
@@ -15,11 +11,7 @@ module.exports = (singleParser) => {
 
     const nextState = manyParser.parseFunction(parserState);
 
-    const {
-      result,
-    } = nextState;
-
-    if (!result) {
+    if (!nextState.result) {
       return {
         ...nextState,
         result: [],

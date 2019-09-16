@@ -2,10 +2,10 @@
 
 ## TODOs
 
-- fixed escaped quotes in quotes (CSV, JSON)
 - multiple parens usage in OPS, e.g. ((42))
 - updateStateResult,
 - updateStateError
+- improve error reporting (stack trace?)
 
 ## Resources
 

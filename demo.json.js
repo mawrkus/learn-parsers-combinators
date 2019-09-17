@@ -12,7 +12,7 @@ const {
   manyOrNone,
   not,
   regex,
-  sepBy
+  sepBy,
   sepByOrNone,
   sequenceOf,
   str,

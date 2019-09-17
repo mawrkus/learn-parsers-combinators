@@ -27,23 +27,38 @@ class CsvParser extends Parser {
     headers = false,
     trim = false,
   } = {}) {
-    const quoteParser = quote !== false ? chr(quote) : null;
-    const betweenQuotesParser = between(quoteParser, quoteParser);
     const delimiterParser = chr(delimiter);
     const eolParser = str(eol);
     const eoiParser = eoi();
     const trimFn = trim ? s => s.trim() : s => s;
     const mapFieldResult = field => field === null ? '' : trimFn(field);
 
-    const fieldParser = quote === false
-      ? anyExcept(anyOf([delimiterParser, eolParser])).map(mapFieldResult)
-      : anyOf([
-        betweenQuotesParser(anyExcept(quoteParser)).map(mapFieldResult),
-        anyExcept(quoteParser).map(() => ''),
-      ]);
+    let fieldParser;
 
-    const lineParser = sepBy(delimiterParser)(fieldParser);
-    const linesParser = sepBy(eolParser)(lineParser);
+    if (quote === false) {
+      fieldParser = manyExcept(
+        anyOf([delimiterParser, eolParser]),
+      ).map(mapFieldResult);
+    } else {
+      const quoteParser = chr(quote);
+      const escapedQuoteParser = str(`\\${quote}`)
+      const betweenQuotesParser = between(quoteParser, quoteParser);
+
+      fieldParser = betweenQuotesParser(
+        manyOrNone(
+          anyOf([
+            escapedQuoteParser,
+            not(anyOf([
+              quoteParser,
+              eolParser,
+            ])),
+          ]),
+        ).map(s => s.join('')),
+      ).map(mapFieldResult);
+    }
+
+    const lineParser = sepByOrNone(delimiterParser)(fieldParser);
+    const linesParser = sepByOrNone(eolParser)(lineParser);
 
     const csvParser = headers
       ? linesParser
@@ -86,68 +101,74 @@ function logOutput(parsed) {
 
 let parser;
 
-/* [
-  '',
-  '\n',
-  '\n  \n',
-  ';',
-  ';\n',
-  ' ; ',
-  ' \n',
-  ' ;',
-  ' ;\n',
-  'tine',
-  'tine;',
-  'tine;\n',
-  'tine;marc',
-  'tine;marc;',
-  'tine;marc;\n',
-  ' tine ; marc ;    \n',
-  'tina;marc\ncata;carlos',
+[
+  // '',
+  // '\n',
+  // '\n  \n',
+  // ';',
+  // ';\n',
+  // ' ; ',
+  // ' \n',
+  // ' ;',
+  // ' ;\n',
+  // 'tine',
+  // 'tine;',
+  // 'tine;\n',
+  // 'tine;marc',
+  // 'tine;marc;',
+  // 'tine;marc;\n',
+  // ' tine ; marc ;    \n',
+  // 'tina;marc\ncata;carlos',
 ].forEach((input) => {
   const parser = new CsvParser({
     quote: false,
     // trim: true,
   });
   logOutput(parser.run(input));
-}); */
+});
 
-/* [
-  '',
-  '\n',
-  '\n  \n',
-  '""',
-  '""\n',
-  '"";""',
-  '"";""\n',
-  '" ";" "',
-  '" "\n',
-  '" ";',
-  '" ";\n',
-  '"tine"',
-  '"tine";',
-  '"tine";\n',
-  '"tine";"marc"',
-  '"tine";"marc";',
-  '"tine";"marc";\n',
-  '"tina";"marc"\n"cata";"carlos"'
+[
+  // '',
+  // '\n',
+  // '\n  // \n',
+  // '""',
+  // '""\n',
+  // '"";""',
+  // '"";""\n',
+  // '" ";" "',
+  // '" "\n',
+  // '" ";',
+  // '" ";\n',
+  // '"tine"',
+  // '"tine";',
+  // '"tine";\n',
+  // '"tine";"marc"',
+  // '"tine";"marc";',
+  // '"tine";"marc";\n',
+  // '"tina";"marc"\n"cata";"carlos"',
+  // '"Theodore \\"Mawrkus\\" Smith";"Florentina Bellaire"',
+  // '"tina',
+  // '"tina";"marc',
 ].forEach((input) => {
   const parser = new CsvParser();
   logOutput(parser.run(input));
-}); */
-
-parser = new CsvParser({
-  quote: false,
-  delimiter: ',',
-  eol: '\n',
-  headers: true,
-  trim: true,
 });
 
-logOutput(parser.run(`who,ok?,when?
-  tina,yes,now
-  cata,yes,later
-  nana,no,now
-  marc,,later
-  carlos,yes,later
-  bogdan,no,now`));
+[
+  `who,ok?,when?
+    tina,yes,now
+    cata,yes,later
+    nana,no,now
+    marc,,later
+    carlos,yes,later
+    bogdan,no,now`
+].forEach((input) => {
+  const parser = new CsvParser({
+    quote: false,
+    delimiter: ',',
+    eol: '\n',
+    headers: true,
+    trim: true,
+  });
+  logOutput(parser.run(input));
+});

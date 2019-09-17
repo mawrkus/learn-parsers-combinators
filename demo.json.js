@@ -2,7 +2,7 @@ const Parser = require('./src/Parser');
 
 /* eslint-disable no-unused-vars */
 const {
-  anyExcept,
+  manyExcept,
   anyOf,
   between,
   chr,

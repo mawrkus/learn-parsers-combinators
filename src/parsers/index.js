@@ -1,4 +1,4 @@
-const anyExcept = require('./anyExcept');
+const manyExcept = require('./manyExcept');
 const anyOf = require('./anyOf');
 const between = require('./between');
 const chr = require('./chr');
@@ -14,7 +14,7 @@ const sequenceOf = require('./sequenceOf');
 const str = require('./str');
 
 module.exports = {
-  anyExcept,
+  manyExcept,
   anyOf,
   between,
   chr,

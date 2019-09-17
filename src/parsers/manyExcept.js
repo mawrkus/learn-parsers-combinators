@@ -5,7 +5,7 @@ module.exports = (exceptParser) => {
     throw new TypeError('Please provide an instance of the "Parser" class!');
   }
 
-  const anyExceptParser = new Parser((parserState) => {
+  const manyExceptParser = new Parser((parserState) => {
     if (parserState.error) {
       return parserState;
     }
@@ -25,7 +25,7 @@ module.exports = (exceptParser) => {
         return {
           ...currentState,
           // proper deal with some edge cases, e.g.:
-          // sepByOrNone(chr(';'))(anyExcept(chr(';')) on input 'x;'
+          // sepByOrNone(chr(';'))(manyExcept(chr(';')) on input 'x;'
           result,
           error: null,
         };
@@ -42,5 +42,5 @@ module.exports = (exceptParser) => {
     }
   }, `AnyExcept(${exceptParser.type})`);
 
-  return anyExceptParser;
+  return manyExceptParser;
 };

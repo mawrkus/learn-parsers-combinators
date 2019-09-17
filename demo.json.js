@@ -12,7 +12,8 @@ const {
   manyOrNone,
   not,
   regex,
-  sepBy,
+  sepBy
+  sepByOrNone,
   sequenceOf,
   str,
 } = require('./src/parsers');
@@ -32,7 +33,7 @@ class JsonParser extends Parser {
       betweenOptionalWhitespaces(chr('}')),
     );
     const betweenQuotes = between(chr('"'), chr('"'));
-    const sepByComma = sepBy(chr(','));
+    const sepByOrNoneComma = sepByOrNone(chr(','));
 
     const number = regex(/^-?\d+(\.\d+)?/).map((n) => Number(n));
 
@@ -58,7 +59,7 @@ class JsonParser extends Parser {
     );
 
     const array = betweenBrackets(
-      sepByComma(value),
+      sepByOrNoneComma(value),
     );
 
     const nameValuePair = sequenceOf([
@@ -68,7 +69,7 @@ class JsonParser extends Parser {
     ]);
 
     const object = betweenBraces(
-      sepByComma(
+      sepByOrNoneComma(
         nameValuePair,
       ).map(pairs => pairs.reduce((acc, [name, colon, value]) => ({ ...acc, [name]: value }), {})),
     );

@@ -13,6 +13,7 @@ const {
   not,
   regex,
   sepBy,
+  sepByOrNone,
   sequenceOf,
   str,
 } = require('./src/parsers');

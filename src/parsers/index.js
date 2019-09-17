@@ -9,6 +9,7 @@ const manyOrNone = require('./manyOrNone');
 const not = require('./not');
 const regex = require('./regex');
 const sepBy = require('./sepBy');
+const sepByOrNone = require('./sepByOrNone');
 const sequenceOf = require('./sequenceOf');
 const str = require('./str');
 
@@ -24,6 +25,7 @@ module.exports = {
   not,
   regex,
   sepBy,
+  sepByOrNone,
   sequenceOf,
   str,
 };

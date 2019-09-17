@@ -25,10 +25,6 @@ module.exports = (sepParser) => {
         currentState = valueParser.parseFunction(currentState);
 
         if (currentState.error) {
-          if (!results.length) {
-            break;
-          }
-
           return {
             ...currentState,
             result: null,

@@ -40,7 +40,7 @@ module.exports = (exceptParser) => {
         result,
       };
     }
-  }, `AnyExcept(${exceptParser.type})`);
+  }, `ManyExcept(${exceptParser.type})`);
 
   return manyExceptParser;
 };

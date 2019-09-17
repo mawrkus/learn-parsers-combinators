@@ -5,7 +5,7 @@ const ParserError = require('../../ParserError');
 
 const buildParserState = require('./helpers/buildParserState');
 
-fdescribe('not(parser)', () => {
+describe('not(parser)', () => {
   it('should return a parser', () => {
     expect(not(chr('x'))).toBeInstanceOf(Parser);
   });

@@ -1,0 +1,51 @@
+{
+  "name": "learn-parsers-combinators",
+  "version": "0.1.0",
+  "description": "Playground for learning parsers combinators",
+  "main": "index.js",
+  "scripts": {
+    "lint": "eslint ./src",
+    "pretest": "npm run lint",
+    "test": "jest",
+    "tdd": "jest --watch --notify",
+    "demo:csv": "clear && node demo.csv.js",
+    "demo:ops": "clear && node demo.ops.js",
+    "demo:json": "clear && node demo.json.js"
+  },
+  "author": "mawrkus <web@sparring-partner.be>",
+  "license": "MIT",
+  "devDependencies": {
+    "eslint": "^6.3.0",
+    "eslint-config-airbnb-base": "^14.0.0",
+    "eslint-plugin-import": "^2.18.2",
+    "eslint-plugin-jest": "^22.16.0",
+    "jest": "^24.9.0"
+  },
+  "eslintConfig": {
+    "extends": [
+      "airbnb-base"
+    ],
+    "plugins": [
+      "jest"
+    ],
+    "env": {
+      "jest": true
+    },
+    "rules": {
+      "jest/no-disabled-tests": "error",
+      "jest/no-focused-tests": "error",
+      "jest/no-identical-title": "warn",
+      "no-underscore-dangle": "off",
+      "no-console": "off"
+    }
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "collectCoverage": true,
+    "verbose": true,
+    "testPathIgnorePatterns": [
+      "/node_modules/"
+    ],
+    "testRegex": "/__tests__/.*\\.spec\\.js$"
+  }
+}
